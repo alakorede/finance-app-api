@@ -19,5 +19,10 @@
         "globals": "^16.2.0",
         "husky": "^8.0.3",
         "lint-staged": "^16.1.0"
+    },
+    "dependencies": {
+        "dotenv": "^16.5.0",
+        "express": "^5.1.0",
+        "pg": "^8.16.0"
     }
 }
