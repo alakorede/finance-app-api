@@ -12,7 +12,7 @@ const execMigrations = async () => {
     try {
         const filePath = path.join(__dirname, "01-init.sql")
         const script = fs.readFileSync(filePath, "utf-8")
-
+        console.log(filePath)
         await client.query(script)
         console.log("Migrations executed successfully")
     } catch (e) {
