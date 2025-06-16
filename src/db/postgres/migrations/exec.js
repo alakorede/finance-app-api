@@ -7,7 +7,7 @@ import { pool } from "../helper.js"
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
-const execMigrations = async () => {
+export const execMigrations = async () => {
     const client = await pool.connect()
     try {
         const filePath = path.join(__dirname, "01-init.sql")
