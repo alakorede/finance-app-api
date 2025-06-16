@@ -1,13 +1,16 @@
 import { GetUserByIdUseCase } from "../use-cases/get-user-by-id.js"
 import { serverReturn } from "./helpers.js"
+import validator from "validator"
 
 export class GetUserByIdController {
     async execute(httpRequest) {
         try {
             const userId = httpRequest.params.userId
 
-            if (!userId) {
-                return serverReturn(400, { message: "userId must be provided" })
+            if (!userId || !validator.isUUID(userId)) {
+                return serverReturn(400, {
+                    message: "userId must be provided and must be an UUID",
+                })
             }
 
             const getUserByIdUseCase = new GetUserByIdUseCase()
