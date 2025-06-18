@@ -1,7 +1,13 @@
-import validator from "validator"
 import { CreateUserUseCase } from "../use-cases/create-user.js"
-import { serverReturn } from "./helpers.js"
 import { EmailAlreadyInUseError } from "../errors/user.js"
+import { serverReturn, internalServerError } from "./helpers/http.js"
+import {
+    invalidPasswordResponse,
+    emailAlreadyInUseResponse,
+    invalidEmailResponse,
+    isPasswordValid,
+    isEmailValid,
+} from "./helpers/users.js"
 
 export class CreateUserController {
     async execute(httpRequest) {
@@ -23,14 +29,12 @@ export class CreateUserController {
                 }
             }
 
-            if (params.password.length < 6) {
-                return serverReturn(400, {
-                    message: "Password must be at least 6 characters",
-                })
+            if (!isPasswordValid(params.password)) {
+                return invalidPasswordResponse()
             }
 
-            if (!validator.isEmail(params.email)) {
-                return serverReturn(400, { message: "Invalid e-mail" })
+            if (!isEmailValid(params.email)) {
+                return invalidEmailResponse()
             }
             //chamar o use case
             const createUserUseCase = new CreateUserUseCase()
@@ -41,11 +45,11 @@ export class CreateUserController {
             return serverReturn(201, createdUser)
         } catch (e) {
             if (e instanceof EmailAlreadyInUseError) {
-                return serverReturn(400, { message: e.message })
+                return emailAlreadyInUseResponse()
             }
 
             console.log(e)
-            return serverReturn(500, { message: "Internal server error" })
+            return internalServerError()
         }
     }
 }

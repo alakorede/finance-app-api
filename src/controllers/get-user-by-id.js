@@ -1,16 +1,14 @@
 import { GetUserByIdUseCase } from "../use-cases/get-user-by-id.js"
-import { serverReturn } from "./helpers.js"
-import validator from "validator"
+import { serverReturn, internalServerError } from "./helpers/http.js"
+import { invalidIdResponse, idIdValid } from "./helpers/users.js"
 
 export class GetUserByIdController {
     async execute(httpRequest) {
         try {
             const userId = httpRequest.params.userId
 
-            if (!userId || !validator.isUUID(userId)) {
-                return serverReturn(400, {
-                    message: "userId must be provided and must be an UUID",
-                })
+            if (!idIdValid(userId)) {
+                return invalidIdResponse()
             }
 
             const getUserByIdUseCase = new GetUserByIdUseCase()
@@ -18,11 +16,11 @@ export class GetUserByIdController {
             console.log(userFound)
 
             return !userFound
-                ? serverReturn(200, { message: "user not found" })
+                ? serverReturn(400, { message: "user not found" })
                 : serverReturn(200, userFound)
         } catch (e) {
             console.log(e)
-            return serverReturn(500, { message: "Internal server error" })
+            return internalServerError()
         }
     }
 }

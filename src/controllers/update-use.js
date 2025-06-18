@@ -1,6 +1,13 @@
-import validator from "validator"
 import { UpdateUserUseCase } from "../use-cases/update-user.js"
-import { serverReturn } from "./helpers.js"
+import { serverReturn, internalServerError } from "./helpers/http.js"
+import {
+    invalidPasswordResponse,
+    invalidEmailResponse,
+    invalidIdResponse,
+    isPasswordValid,
+    isEmailValid,
+    idIdValid,
+} from "./helpers/users.js"
 import { EmailAlreadyInUseError } from "../errors/user.js"
 
 export class UpdateUserController {
@@ -8,10 +15,8 @@ export class UpdateUserController {
         try {
             const userId = httpRequest.params.userId
 
-            if (!userId || !validator.isUUID(userId)) {
-                return serverReturn(400, {
-                    message: "userId must be provided and must be an UUID",
-                })
+            if (!idIdValid(userId)) {
+                return invalidIdResponse()
             }
 
             const updateUserParams = httpRequest.body
@@ -42,16 +47,14 @@ export class UpdateUserController {
             }
 
             if (updateUserParams.password) {
-                if (updateUserParams.password.length < 6) {
-                    return serverReturn(400, {
-                        message: "Password must be at least 6 characters",
-                    })
+                if (!isPasswordValid(updateUserParams.password)) {
+                    return invalidPasswordResponse()
                 }
             }
 
             if (updateUserParams.email) {
-                if (!validator.isEmail(updateUserParams.email)) {
-                    return serverReturn(400, { message: "Invalid e-mail" })
+                if (!isEmailValid(updateUserParams.email)) {
+                    return invalidEmailResponse()
                 }
             }
 
@@ -73,7 +76,7 @@ export class UpdateUserController {
             }
 
             console.log(e)
-            return serverReturn(500, { message: "Internal server error" })
+            return internalServerError()
         }
     }
 }

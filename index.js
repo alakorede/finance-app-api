@@ -3,9 +3,11 @@
 // garantindo que o acesso do process.env esteja disponível pra todo o dódigo
 import "dotenv/config.js"
 import express from "express"
-import { CreateUserController } from "./src/controllers/create-user.js"
-import { GetUserByIdController } from "./src/controllers/get-user-by-id.js"
-import { UpdateUserController } from "./src/controllers/update-use.js"
+import {
+    CreateUserController,
+    GetUserByIdController,
+    UpdateUserController,
+} from "./src/controllers/index.js"
 
 const app = express()
 app.use(express.json())
