@@ -7,7 +7,7 @@ import {
     isEmailValid,
     idIdValid,
 } from "../helpers/users.js"
-import { EmailAlreadyInUseError } from "../../errors/user.js"
+import { EmailAlreadyInUseError, UserNotFoundError } from "../../errors/user.js"
 
 export class UpdateUserController {
     constructor(updateUserUseCase) {
@@ -66,12 +66,15 @@ export class UpdateUserController {
             )
 
             if (!updatedUser) {
-                return serverReturn(400, { message: "Update user failed" })
+                throw new UserNotFoundError()
             }
 
             return serverReturn(201, updatedUser)
         } catch (e) {
-            if (e instanceof EmailAlreadyInUseError) {
+            if (
+                e instanceof EmailAlreadyInUseError ||
+                e instanceof UserNotFoundError
+            ) {
                 return serverReturn(400, { message: e.message })
             }
 

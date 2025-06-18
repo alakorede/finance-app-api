@@ -1,6 +1,6 @@
 import { serverReturn, internalServerError } from "../helpers/http.js"
 import { invalidIdResponse, idIdValid } from "../helpers/users.js"
-
+import { UserNotFoundError } from "../../errors/user.js"
 export class GetUserByIdController {
     constructor(getUserByIdUseCase) {
         this.getUserByIdUseCase = getUserByIdUseCase
@@ -15,10 +15,15 @@ export class GetUserByIdController {
 
             const userFound = await this.getUserByIdUseCase.execute(userId)
 
-            return !userFound
-                ? serverReturn(400, { message: "user not found" })
-                : serverReturn(200, userFound)
+            if (!userFound) {
+                throw new UserNotFoundError()
+            }
+
+            return serverReturn(200, userFound)
         } catch (e) {
+            if (e instanceof UserNotFoundError) {
+                return serverReturn(400, { message: e.message })
+            }
             console.log(e)
             return internalServerError()
         }
