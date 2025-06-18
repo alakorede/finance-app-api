@@ -1,4 +1,4 @@
-import { serverReturn, internalServerError } from "./helpers/http.js"
+import { serverReturn, internalServerError } from "../helpers/http.js"
 import {
     invalidPasswordResponse,
     invalidEmailResponse,
@@ -6,8 +6,8 @@ import {
     isPasswordValid,
     isEmailValid,
     idIdValid,
-} from "./helpers/users.js"
-import { EmailAlreadyInUseError } from "../errors/user.js"
+} from "../helpers/users.js"
+import { EmailAlreadyInUseError } from "../../errors/user.js"
 
 export class UpdateUserController {
     constructor(updateUserUseCase) {

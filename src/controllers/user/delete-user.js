@@ -1,5 +1,5 @@
-import { internalServerError, serverReturn } from "./helpers/http.js"
-import { idIdValid, invalidIdResponse } from "./helpers/users.js"
+import { internalServerError, serverReturn } from "../helpers/http.js"
+import { idIdValid, invalidIdResponse } from "../helpers/users.js"
 
 export class DeleteUserController {
     constructor(deleteUserUseCase) {
