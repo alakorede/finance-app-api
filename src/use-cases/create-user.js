@@ -1,10 +1,12 @@
 import bcrypt from "bcrypt"
 import { v4 as uuidv4 } from "uuid"
-import { PostgresCreateUserRepository } from "../repositories/postgres/create-user.js"
 import { PostgresGetUserByEmailRepository } from "../repositories/postgres/get-user-by-email.js"
 import { EmailAlreadyInUseError } from "../errors/user.js"
 
 export class CreateUserUseCase {
+    constructor(createUserRepository) {
+        this.createUserRepository = createUserRepository
+    }
     async execute(createUserParams) {
         // Falta: verificar se o e-mail está em uso
         const postgresGetUserByEmailRepository =
@@ -26,8 +28,7 @@ export class CreateUserUseCase {
             id: userId,
             password: hashedPassword,
         }
-        const postgresCreateUserRepository = new PostgresCreateUserRepository()
 
-        return await postgresCreateUserRepository.execute(user)
+        return await this.createUserRepository.execute(user)
     }
 }
