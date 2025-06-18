@@ -1,7 +1,7 @@
 import bcrypt from "bcrypt"
 import { v4 as uuidv4 } from "uuid"
-import { PostgresGetUserByEmailRepository } from "../repositories/postgres/get-user-by-email.js"
-import { EmailAlreadyInUseError } from "../errors/user.js"
+import { PostgresGetUserByEmailRepository } from "../../repositories/postgres/user/get-user-by-email.js"
+import { EmailAlreadyInUseError } from "../../errors/user.js"
 
 export class CreateUserUseCase {
     constructor(createUserRepository) {
