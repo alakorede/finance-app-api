@@ -8,18 +8,21 @@ import {
     GetUserByIdController,
     UpdateUserController,
     DeleteUserController,
+    CreateTransactionController,
 } from "./src/controllers/index.js"
 import {
     PostgresCreateUserRepository,
     PostgresDeleteUserRepository,
     PostgresGetUserByIdRepository,
     PostgresUpdateUserRepository,
+    PostgresCreateTransactionRepository,
 } from "./src/repositories/postgres/index.js"
 import {
     GetUserByIdUseCase,
     CreateUserUseCase,
     UpdateUserUseCase,
     DeleteUserUseCase,
+    CreateTransactionUseCase,
 } from "./src/use-cases/index.js"
 const app = express()
 app.use(express.json())
@@ -60,6 +63,23 @@ app.delete("/api/users/:userId", async (request, response) => {
     const deleteUserController = new DeleteUserController(deleteUserUseCase)
 
     const { statusCode, body } = await deleteUserController.execute(request)
+
+    return response.status(statusCode).json(body)
+})
+
+app.post("/api/transactions", async (request, response) => {
+    const createTransactionRepository =
+        new PostgresCreateTransactionRepository()
+    const getUserByIdRepository = new PostgresGetUserByIdRepository()
+    const createTransactionUseCase = new CreateTransactionUseCase(
+        createTransactionRepository,
+        getUserByIdRepository,
+    )
+    const createTransactionController = new CreateTransactionController(
+        createTransactionUseCase,
+    )
+    const { statusCode, body } =
+        await createTransactionController.execute(request)
 
     return response.status(statusCode).json(body)
 })

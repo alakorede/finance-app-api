@@ -5,7 +5,7 @@ import {
     invalidIdResponse,
     isPasswordValid,
     isEmailValid,
-    idIdValid,
+    isIdValid,
 } from "../helpers/users.js"
 import { EmailAlreadyInUseError, UserNotFoundError } from "../../errors/user.js"
 
@@ -17,7 +17,7 @@ export class UpdateUserController {
         try {
             const userId = httpRequest.params.userId
 
-            if (!idIdValid(userId)) {
+            if (!isIdValid(userId)) {
                 return invalidIdResponse()
             }
 

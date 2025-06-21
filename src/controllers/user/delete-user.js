@@ -1,5 +1,5 @@
 import { internalServerError, serverReturn } from "../helpers/http.js"
-import { idIdValid, invalidIdResponse } from "../helpers/users.js"
+import { isIdValid, invalidIdResponse } from "../helpers/users.js"
 
 export class DeleteUserController {
     constructor(deleteUserUseCase) {
@@ -9,7 +9,7 @@ export class DeleteUserController {
         try {
             const userId = httpRequest.params.userId
 
-            if (!idIdValid(userId)) {
+            if (!isIdValid(userId)) {
                 return invalidIdResponse()
             }
 

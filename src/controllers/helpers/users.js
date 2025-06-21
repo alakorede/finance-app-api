@@ -16,4 +16,4 @@ export const isPasswordValid = (password) => password.length >= 6
 
 export const isEmailValid = (email) => validator.isEmail(email)
 
-export const idIdValid = (userId) => userId && validator.isUUID(userId)
+export const isIdValid = (userId) => userId && validator.isUUID(userId)

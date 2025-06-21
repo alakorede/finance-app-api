@@ -1,5 +1,5 @@
 import { serverReturn, internalServerError } from "../helpers/http.js"
-import { invalidIdResponse, idIdValid } from "../helpers/users.js"
+import { invalidIdResponse, isIdValid } from "../helpers/users.js"
 import { UserNotFoundError } from "../../errors/user.js"
 export class GetUserByIdController {
     constructor(getUserByIdUseCase) {
@@ -9,7 +9,7 @@ export class GetUserByIdController {
         try {
             const userId = httpRequest.params.userId
 
-            if (!idIdValid(userId)) {
+            if (!isIdValid(userId)) {
                 return invalidIdResponse()
             }
 
