@@ -7,3 +7,7 @@ export const isAmountValid = (amount) => {
         decimal_separator: ".",
     })
 }
+
+export const isTypeValid = (type) => {
+    return ["EARNING", "EXPENSE", "INVESTMENT"].includes(type)
+}

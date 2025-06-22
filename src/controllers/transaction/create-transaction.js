@@ -5,6 +5,7 @@ import {
     invalidIdResponse,
     validateRequiredFields,
     isAmountValid,
+    isTypeValid,
 } from "../helpers/index.js"
 
 export class CreateTransactionController {
@@ -47,11 +48,7 @@ export class CreateTransactionController {
 
             params.type = params.type.trim().toUpperCase()
 
-            const typeIsValid = ["EARNING", "EXPENSE", "INVESTMENT"].includes(
-                params.type,
-            )
-
-            if (!typeIsValid) {
+            if (!isTypeValid(params.type)) {
                 return serverReturn(400, {
                     message: "The type must be EARNING, EXPENSE or INVESTMENT",
                 })
