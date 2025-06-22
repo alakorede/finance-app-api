@@ -8,6 +8,8 @@ import {
     isEmailValid,
 } from "../helpers/users.js"
 
+import { validateRequiredFields } from "../helpers/validation.js"
+
 export class CreateUserController {
     constructor(createUserUseCase) {
         this.createUserUseCase = createUserUseCase
@@ -23,14 +25,16 @@ export class CreateUserController {
                 "password",
             ]
 
-            for (const field of requiredFields) {
-                if (!params[field] || params[field].trim().length === 0) {
-                    return serverReturn(400, {
-                        message: `Missing param: ${field}`,
-                    })
-                }
-            }
+            const areRequiredFieldsValid = validateRequiredFields(
+                params,
+                requiredFields,
+            )
 
+            if (!areRequiredFieldsValid.ok) {
+                return serverReturn(400, {
+                    message: `Missing param: ${areRequiredFieldsValid.missingField}`,
+                })
+            }
             if (!isPasswordValid(params.password)) {
                 return invalidPasswordResponse()
             }
