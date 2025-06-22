@@ -1,5 +1,9 @@
-import { serverReturn, internalServerError } from "../helpers/http.js"
-import { invalidIdResponse, isIdValid } from "../helpers/users.js"
+import {
+    invalidIdResponse,
+    isIdValid,
+    serverReturn,
+    internalServerError,
+} from "../helpers/index.js"
 import { UserNotFoundError } from "../../errors/user.js"
 export class GetUserByIdController {
     constructor(getUserByIdUseCase) {

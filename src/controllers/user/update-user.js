@@ -1,4 +1,3 @@
-import { serverReturn, internalServerError } from "../helpers/http.js"
 import {
     invalidPasswordResponse,
     invalidEmailResponse,
@@ -6,7 +5,9 @@ import {
     isPasswordValid,
     isEmailValid,
     isIdValid,
-} from "../helpers/users.js"
+    serverReturn,
+    internalServerError,
+} from "../helpers/index.js"
 import { EmailAlreadyInUseError, UserNotFoundError } from "../../errors/user.js"
 
 export class UpdateUserController {

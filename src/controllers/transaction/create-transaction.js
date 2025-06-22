@@ -1,7 +1,11 @@
-import validator from "validator"
-import { internalServerError, serverReturn } from "../helpers/http.js"
-import { isIdValid, invalidIdResponse } from "../helpers/users.js"
-import { validateRequiredFields } from "../helpers/validation.js"
+import {
+    internalServerError,
+    serverReturn,
+    isIdValid,
+    invalidIdResponse,
+    validateRequiredFields,
+    isAmountValid,
+} from "../helpers/index.js"
 
 export class CreateTransactionController {
     constructor(createTransactionUseCase) {
@@ -33,14 +37,7 @@ export class CreateTransactionController {
                 })
             }
 
-            const amountIsValid = validator.isCurrency(
-                params.amount.toString(),
-                {
-                    digits_after_decimal: [2],
-                    allow_negatives: false,
-                    decimal_separator: ".",
-                },
-            )
+            const amountIsValid = isAmountValid(params.amount)
 
             if (!amountIsValid) {
                 return serverReturn(400, {

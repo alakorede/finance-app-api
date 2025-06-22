@@ -1,14 +1,15 @@
 import { EmailAlreadyInUseError } from "../../errors/user.js"
-import { serverReturn, internalServerError } from "../helpers/http.js"
+
 import {
+    serverReturn,
+    internalServerError,
     invalidPasswordResponse,
     emailAlreadyInUseResponse,
     invalidEmailResponse,
     isPasswordValid,
     isEmailValid,
-} from "../helpers/users.js"
-
-import { validateRequiredFields } from "../helpers/validation.js"
+    validateRequiredFields,
+} from "../helpers/index.js"
 
 export class CreateUserController {
     constructor(createUserUseCase) {
