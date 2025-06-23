@@ -22,7 +22,7 @@ export class GetTransactionsByUserIdController {
             const transactions =
                 await this.getTransactionsByUserIdUseCase.execute(userId)
 
-            return serverReturn(201, transactions)
+            return serverReturn(200, transactions)
         } catch (e) {
             if (e instanceof UserNotFoundError) {
                 return serverReturn(400, { message: e.message })

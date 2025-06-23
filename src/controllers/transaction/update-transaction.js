@@ -80,7 +80,7 @@ export class UpdateTransactionController {
                     updateTransactionParams,
                 )
 
-            return serverReturn(201, transactionUpdated)
+            return serverReturn(200, transactionUpdated)
         } catch (e) {
             console.log(e)
             return internalServerError()

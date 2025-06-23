@@ -57,7 +57,7 @@ export class CreateTransactionController {
             const createdTransaction =
                 await this.createTransactionUseCase.execute(params)
 
-            return serverReturn(201, createdTransaction)
+            return serverReturn(200, createdTransaction)
         } catch (e) {
             console.error(e)
             return internalServerError()

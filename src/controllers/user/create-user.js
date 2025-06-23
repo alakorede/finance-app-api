@@ -46,7 +46,7 @@ export class CreateUserController {
 
             const createdUser = await this.createUserUseCase.execute(params)
 
-            return serverReturn(201, createdUser)
+            return serverReturn(200, createdUser)
         } catch (e) {
             if (e instanceof EmailAlreadyInUseError) {
                 return emailAlreadyInUseResponse()

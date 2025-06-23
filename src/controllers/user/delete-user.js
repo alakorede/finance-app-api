@@ -19,7 +19,7 @@ export class DeleteUserController {
 
             const deletedUser = await this.deleteUserUseCase.execute(userId)
 
-            return serverReturn(201, deletedUser)
+            return serverReturn(200, deletedUser)
         } catch (e) {
             console.log(e)
             return internalServerError()

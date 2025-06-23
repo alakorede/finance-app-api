@@ -70,7 +70,7 @@ export class UpdateUserController {
                 throw new UserNotFoundError()
             }
 
-            return serverReturn(201, updatedUser)
+            return serverReturn(200, updatedUser)
         } catch (e) {
             if (
                 e instanceof EmailAlreadyInUseError ||
