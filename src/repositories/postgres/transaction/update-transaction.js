@@ -10,10 +10,12 @@ export class PostgresUpdateTransactionRepository {
             updateValues.push(updateTransactionParams[key])
         })
 
+        updateValues.push(transactionId)
+
         const updateQuery = `
             UPDATE transactions
             SET ${updateFields.join(", ")}
-            WHERE id = $${transactionId}
+            WHERE id = $${updateValues.length}
             RETURNING *`
 
         const updatedTransaction = await PostgresHelper.query(

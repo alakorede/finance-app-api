@@ -19,6 +19,12 @@ export class UpdateTransactionController {
                 return invalidIdResponse()
             }
 
+            if (Object.keys(updateTransactionParams).length === 0) {
+                return serverReturn(400, {
+                    message: "Transaction body is empty",
+                })
+            }
+
             const allowedFields = ["name", "date", "amount", "type"]
 
             const onlyAllowedFieldsWhereProvided = Object.keys(

@@ -1,7 +1,6 @@
 export class UpdateTransactionUseCase {
-    constructor(updateTransactionRepository, getUserByIdRepository) {
+    constructor(updateTransactionRepository) {
         this.updateTransactionRepository = updateTransactionRepository
-        this.getUserByIdRepository = getUserByIdRepository
     }
     async execute(transactionId, updateTransactionParams) {
         return await this.updateTransactionRepository.execute(

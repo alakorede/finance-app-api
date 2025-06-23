@@ -10,6 +10,7 @@ import {
     DeleteUserController,
     CreateTransactionController,
     GetTransactionsByUserIdController,
+    UpdateTransactionController,
 } from "./src/controllers/index.js"
 import {
     PostgresCreateUserRepository,
@@ -18,6 +19,7 @@ import {
     PostgresUpdateUserRepository,
     PostgresCreateTransactionRepository,
     PostgresGetTransactionsByUserIdRepository,
+    PostgresUpdateTransactionRepository,
 } from "./src/repositories/postgres/index.js"
 import {
     GetUserByIdUseCase,
@@ -26,6 +28,7 @@ import {
     DeleteUserUseCase,
     CreateTransactionUseCase,
     GetTransactionsByUserIdUseCase,
+    UpdateTransactionUseCase,
 } from "./src/use-cases/index.js"
 const app = express()
 app.use(express.json())
@@ -100,6 +103,22 @@ app.get("/api/transactions", async (request, response) => {
 
     const { statusCode, body } =
         await getTransactionsByUserIdController.execute(request)
+
+    return response.status(statusCode).json(body)
+})
+
+app.patch("/api/transactions/:transactionId", async (request, response) => {
+    const updateTransactionRepository =
+        new PostgresUpdateTransactionRepository()
+    const updateTransactionUseCase = new UpdateTransactionUseCase(
+        updateTransactionRepository,
+    )
+    const updateTransactionController = new UpdateTransactionController(
+        updateTransactionUseCase,
+    )
+
+    const { statusCode, body } =
+        await updateTransactionController.execute(request)
 
     return response.status(statusCode).json(body)
 })
