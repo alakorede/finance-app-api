@@ -1,4 +1,4 @@
-import { isIdValid, invalidIdResponse, serverReturn } from "../helpers"
+import { isIdValid, invalidIdResponse, serverReturn } from "../helpers/index.js"
 
 export class DeleteTransactionController {
     constructor(deleteTransactionUseCase) {
@@ -14,6 +14,6 @@ export class DeleteTransactionController {
         const deletedTransaction =
             await this.deleteTransactionUseCase.execute(transactionId)
 
-        return serverReturn(201, deletedTransaction)
+        return serverReturn(200, deletedTransaction)
     }
 }

@@ -11,6 +11,7 @@ import {
     CreateTransactionController,
     GetTransactionsByUserIdController,
     UpdateTransactionController,
+    DeleteTransactionController,
 } from "./src/controllers/index.js"
 import {
     PostgresCreateUserRepository,
@@ -20,6 +21,7 @@ import {
     PostgresCreateTransactionRepository,
     PostgresGetTransactionsByUserIdRepository,
     PostgresUpdateTransactionRepository,
+    PostgresDeleteTransactionRepository,
 } from "./src/repositories/postgres/index.js"
 import {
     GetUserByIdUseCase,
@@ -29,10 +31,12 @@ import {
     CreateTransactionUseCase,
     GetTransactionsByUserIdUseCase,
     UpdateTransactionUseCase,
+    DeleteTransactionUseCase,
 } from "./src/use-cases/index.js"
 const app = express()
 app.use(express.json())
 
+// = = = = = = = = = = = = Users = = = = = = = = = = = =
 app.post("/api/users", async (request, response) => {
     const createUserRepository = new PostgresCreateUserRepository()
     const createUserUseCase = new CreateUserUseCase(createUserRepository)
@@ -73,6 +77,7 @@ app.delete("/api/users/:userId", async (request, response) => {
     return response.status(statusCode).json(body)
 })
 
+// = = = = = = = = = = = Transactions = = = = = = = = = = = =
 app.post("/api/transactions", async (request, response) => {
     const createTransactionRepository =
         new PostgresCreateTransactionRepository()
@@ -119,6 +124,22 @@ app.patch("/api/transactions/:transactionId", async (request, response) => {
 
     const { statusCode, body } =
         await updateTransactionController.execute(request)
+
+    return response.status(statusCode).json(body)
+})
+
+app.delete("/api/transactions/:transactionId", async (request, response) => {
+    const deleteTransactionRepository =
+        new PostgresDeleteTransactionRepository()
+    const deleteTransactionUseCase = new DeleteTransactionUseCase(
+        deleteTransactionRepository,
+    )
+    const deleteTransactionController = new DeleteTransactionController(
+        deleteTransactionUseCase,
+    )
+
+    const { statusCode, body } =
+        await deleteTransactionController.execute(request)
 
     return response.status(statusCode).json(body)
 })
