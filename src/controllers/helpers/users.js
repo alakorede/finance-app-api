@@ -10,7 +10,7 @@ export const emailAlreadyInUseResponse = () =>
 export const invalidEmailResponse = () => serverReturn(400, "Invalid e-mail")
 
 export const invalidIdResponse = () =>
-    serverReturn(400, "userId must be provided and must be an UUID")
+    serverReturn(400, "Id must be provided and must be an UUID")
 
 export const isPasswordValid = (password) => password.length >= 6
 
