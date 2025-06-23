@@ -7,7 +7,7 @@ import {
 
 import { UserNotFoundError } from "../../errors/user.js"
 
-export class GetTransactionsByUserId {
+export class GetTransactionsByUserIdController {
     constructor(getTransactionsByUserIdUseCase) {
         this.getTransactionsByUserIdUseCase = getTransactionsByUserIdUseCase
     }
@@ -20,7 +20,7 @@ export class GetTransactionsByUserId {
             }
 
             const transactions =
-                await this.getTransactionsByUserIdUseCase(userId)
+                await this.getTransactionsByUserIdUseCase.execute(userId)
 
             return serverReturn(201, transactions)
         } catch (e) {

@@ -9,6 +9,7 @@ import {
     UpdateUserController,
     DeleteUserController,
     CreateTransactionController,
+    GetTransactionsByUserIdController,
 } from "./src/controllers/index.js"
 import {
     PostgresCreateUserRepository,
@@ -16,6 +17,7 @@ import {
     PostgresGetUserByIdRepository,
     PostgresUpdateUserRepository,
     PostgresCreateTransactionRepository,
+    PostgresGetTransactionsByUserIdRepository,
 } from "./src/repositories/postgres/index.js"
 import {
     GetUserByIdUseCase,
@@ -23,6 +25,7 @@ import {
     UpdateUserUseCase,
     DeleteUserUseCase,
     CreateTransactionUseCase,
+    GetTransactionsByUserIdUseCase,
 } from "./src/use-cases/index.js"
 const app = express()
 app.use(express.json())
@@ -80,6 +83,23 @@ app.post("/api/transactions", async (request, response) => {
     )
     const { statusCode, body } =
         await createTransactionController.execute(request)
+
+    return response.status(statusCode).json(body)
+})
+
+app.get("/api/transactions", async (request, response) => {
+    const getTransactionsByUserIdRepository =
+        new PostgresGetTransactionsByUserIdRepository()
+    const getUserByIdRepository = new PostgresGetUserByIdRepository()
+    const getTransactionsByUserIdUseCase = new GetTransactionsByUserIdUseCase(
+        getTransactionsByUserIdRepository,
+        getUserByIdRepository,
+    )
+    const getTransactionsByUserIdController =
+        new GetTransactionsByUserIdController(getTransactionsByUserIdUseCase)
+
+    const { statusCode, body } =
+        await getTransactionsByUserIdController.execute(request)
 
     return response.status(statusCode).json(body)
 })
