@@ -6,3 +6,4 @@ node_modules
 
 #Environment Variables
 .env
+/src/generated/prisma
