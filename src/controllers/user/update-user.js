@@ -1,9 +1,7 @@
+import { ZodError } from "zod"
+import { updateUserSchema } from "../../schemas/index.js"
 import {
-    invalidPasswordResponse,
-    invalidEmailResponse,
     invalidIdResponse,
-    isPasswordValid,
-    isEmailValid,
     isIdValid,
     serverReturn,
     internalServerError,
@@ -24,42 +22,7 @@ export class UpdateUserController {
 
             const updateUserParams = httpRequest.body
 
-            const allowedFields = [
-                "first_name",
-                "last_name",
-                "email",
-                "password",
-            ]
-
-            const someFieldIsNotAllowed = Object.keys(updateUserParams).some(
-                (field) => !allowedFields.includes(field),
-            )
-
-            if (someFieldIsNotAllowed) {
-                return serverReturn(400, {
-                    message: "Some provided field is not allowed",
-                })
-            }
-
-            for (const [key, value] of Object.entries(updateUserParams)) {
-                if (typeof value === "string" && value.trim().length === 0) {
-                    return serverReturn(400, {
-                        message: `Field "${key}" is empty. Empty fields are not allowed.`,
-                    })
-                }
-            }
-
-            if (updateUserParams.password) {
-                if (!isPasswordValid(updateUserParams.password)) {
-                    return invalidPasswordResponse()
-                }
-            }
-
-            if (updateUserParams.email) {
-                if (!isEmailValid(updateUserParams.email)) {
-                    return invalidEmailResponse()
-                }
-            }
+            await updateUserSchema.parseAsync(updateUserParams)
 
             const updatedUser = await this.updateUserUseCase.execute(
                 userId,
@@ -72,6 +35,10 @@ export class UpdateUserController {
 
             return serverReturn(200, updatedUser)
         } catch (e) {
+            if (e instanceof ZodError) {
+                return serverReturn(400, { message: e.errors[0].message })
+            }
+
             if (
                 e instanceof EmailAlreadyInUseError ||
                 e instanceof UserNotFoundError
