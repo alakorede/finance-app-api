@@ -29,3 +29,17 @@ CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 
 -- AddForeignKey
 ALTER TABLE "Transaction" ADD CONSTRAINT "Transaction_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+
+-- Create the view
+CREATE VIEW user_balance_view AS
+SELECT
+	user_id,
+	SUM(CASE WHEN type = 'EARNING' THEN amount ELSE 0 END) AS earnings,
+	SUM(CASE WHEN type = 'EXPENSE' THEN amount ELSE 0 END) AS expenses,
+	SUM(CASE WHEN type = 'INVESTMENT' THEN amount ELSE 0 END) AS investments,
+	SUM(CASE WHEN type = 'EARNING' THEN amount ELSE 0 END)
+		- SUM(CASE WHEN type = 'EXPENSE' THEN amount ELSE 0 END)
+		- SUM(CASE WHEN type = 'INVESTMENT' THEN amount ELSE 0 END) AS balance
+FROM transactions
+GROUP BY user_id;
