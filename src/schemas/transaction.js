@@ -12,7 +12,9 @@ export const createTransactionSchema = z.object({
         .min(1, { message: "name is required" }),
     date: z
         .string({ required_error: "date required" })
-        .date({ message: "date must be in a valid date format ISOString" }),
+        .refine((val) => validator.isISO8601(val), {
+            message: "date must be in a valid date format ISOString",
+        }),
     type: z.enum(["EXPENSE", "EARNING", "INVESTMENT"], {
         errorMap: () => ({
             message: "Type must be EXPENSE, EARNING or INVESTMENT",
