@@ -7,7 +7,7 @@ export const createUserSchema = z.object({
         })
         .trim()
         .min(1, {
-            message: "fisrt_name required",
+            message: "first_name required",
         }),
     last_name: z
         .string({

@@ -24,7 +24,6 @@ export class CreateUserController {
             return serverReturn(200, createdUser)
         } catch (e) {
             if (e instanceof ZodError) {
-                console.log()
                 return serverReturn(400, { message: e.errors[0].message })
             }
 
