@@ -24,10 +24,12 @@ export class CreateUserController {
             return serverReturn(200, createdUser)
         } catch (e) {
             if (e instanceof ZodError) {
+                console.log(e)
                 return serverReturn(400, { message: e.errors[0].message })
             }
 
             if (e instanceof EmailAlreadyInUseError) {
+                console.log(e)
                 return emailAlreadyInUseResponse()
             }
 
