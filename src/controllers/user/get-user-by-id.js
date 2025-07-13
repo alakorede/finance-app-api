@@ -26,7 +26,7 @@ export class GetUserByIdController {
             return serverReturn(200, userFound)
         } catch (e) {
             if (e instanceof UserNotFoundError) {
-                return serverReturn(400, { message: e.message })
+                return serverReturn(404, { message: e.message })
             }
             console.log(e)
             return internalServerError()

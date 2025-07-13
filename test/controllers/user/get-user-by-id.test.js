@@ -62,4 +62,28 @@ describe("GetUserByIdController", () => {
             "Id must be provided and must be an UUID",
         )
     })
+
+    test("Should return 404 on user not found error", async () => {
+        //arrange
+        const { getUserByIdUseCase, sut } = makeSut()
+
+        jest.spyOn(getUserByIdUseCase, "execute").mockReturnValueOnce(null)
+        //act
+        const result = await sut.execute(httpRequest)
+        //assert
+        expect(result.statusCode).toBe(404)
+    })
+
+    test("Should return 500 on internal error", async () => {
+        //arrange
+        const { getUserByIdUseCase, sut } = makeSut()
+
+        jest.spyOn(getUserByIdUseCase, "execute").mockImplementationOnce(() => {
+            throw new Error()
+        })
+        //act
+        const result = await sut.execute(httpRequest)
+        //assert
+        expect(result.statusCode).toBe(500)
+    })
 })
