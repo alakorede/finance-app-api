@@ -55,4 +55,19 @@ describe("GetUserBalanceController", () => {
             "Id must be provided and must be an UUID",
         )
     })
+
+    test("Should return 500 on internal error", async () => {
+        //arrange
+        const { getUserBalanceUseCase, sut } = makeSut()
+
+        jest.spyOn(getUserBalanceUseCase, "execute").mockImplementationOnce(
+            () => {
+                throw new Error()
+            },
+        )
+        //act
+        const result = await sut.execute(httpRequest)
+        //assert
+        expect(result.statusCode).toBe(500)
+    })
 })
