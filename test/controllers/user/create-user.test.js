@@ -1,4 +1,5 @@
 import { CreateUserController } from "../../../src/controllers/user/create-user.js"
+import { EmailAlreadyInUseError } from "../../../src/errors/user.js"
 import { faker } from "@faker-js/faker"
 
 describe("Create User Controller", () => {
@@ -191,11 +192,59 @@ describe("Create User Controller", () => {
         }
 
         const executeSpy = jest.spyOn(createUserUseCase, "execute")
-        //act
 
+        //act
         await createUserController.execute(httpRequest)
         //assert
         expect(executeSpy).toHaveBeenCalledWith(httpRequest.body)
         expect(executeSpy).toHaveBeenCalledTimes(1)
+    })
+
+    it("should return 500 if CreateUserUseCase throws ", async () => {
+        //arrange
+        const createUserUseCase = new CreateUserUseCaseStub()
+        const createUserController = new CreateUserController(createUserUseCase)
+
+        const httpRequest = {
+            body: {
+                first_name: faker.person.firstName(),
+                last_name: faker.person.lastName(),
+                email: faker.internet.email(),
+                password: faker.internet.password({ length: 7 }),
+            },
+        }
+        //act
+        jest.spyOn(createUserUseCase, "execute").mockImplementationOnce(() => {
+            throw new Error()
+        })
+
+        const result = await createUserController.execute(httpRequest)
+
+        //assert
+        expect(result.statusCode).toBe(500)
+    })
+
+    it("Should return statusCode 400 if CreateUserUseCase throws EmailIsAlreadyInUseError  ", async () => {
+        //arrange
+        const createUserUseCase = new CreateUserUseCaseStub()
+        const createUserController = new CreateUserController(createUserUseCase)
+
+        const httpRequest = {
+            body: {
+                first_name: faker.person.firstName(),
+                last_name: faker.person.lastName(),
+                email: faker.internet.email(),
+                password: faker.internet.password({ length: 7 }),
+            },
+        }
+        //act
+        jest.spyOn(createUserUseCase, "execute").mockImplementationOnce(() => {
+            throw new EmailAlreadyInUseError(httpRequest.body.email)
+        })
+
+        const result = await createUserController.execute(httpRequest)
+
+        //assert
+        expect(result.statusCode).toBe(400)
     })
 })
