@@ -31,4 +31,28 @@ describe("GetUserBalanceController", () => {
         expect(result.statusCode).toBe(200)
         expect(result.body).not.toBe(undefined)
     })
+
+    test("Should return 400 and related message about provide userID when do not send userID on request", async () => {
+        //arrange
+        const { sut } = makeSut()
+        //act
+        const result = await sut.execute({ params: {} })
+        //assert
+        expect(result.statusCode).toBe(400)
+        expect(result.body.message).toBe(
+            "Id must be provided and must be an UUID",
+        )
+    })
+
+    test("Should return 400 and related message about provide userID when provided userID is not on the right format (UUID)", async () => {
+        //arrange
+        const { sut } = makeSut()
+        //act
+        const result = await sut.execute({ params: { userId: "invalid_id" } })
+        //assert
+        expect(result.statusCode).toBe(400)
+        expect(result.body.message).toBe(
+            "Id must be provided and must be an UUID",
+        )
+    })
 })
