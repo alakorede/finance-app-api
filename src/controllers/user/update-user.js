@@ -39,11 +39,12 @@ export class UpdateUserController {
                 return serverReturn(400, { message: e.errors[0].message })
             }
 
-            if (
-                e instanceof EmailAlreadyInUseError ||
-                e instanceof UserNotFoundError
-            ) {
+            if (e instanceof EmailAlreadyInUseError) {
                 return serverReturn(400, { message: e.message })
+            }
+
+            if (e instanceof UserNotFoundError) {
+                return serverReturn(404, { message: e.message })
             }
 
             console.log(e)
