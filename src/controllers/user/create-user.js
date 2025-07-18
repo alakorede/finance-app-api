@@ -14,7 +14,6 @@ export class CreateUserController {
     }
     async execute(httpRequest) {
         try {
-            //validar a requisição (campos obrigatórios, e-mail válido e tamanho de senha)
             const params = httpRequest.body
 
             await createUserSchema.parseAsync(params)
