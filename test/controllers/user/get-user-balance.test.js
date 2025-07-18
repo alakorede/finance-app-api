@@ -26,7 +26,6 @@ describe("GetUserBalanceController", () => {
         const { sut } = makeSut()
         //act
         const result = await sut.execute(httpRequest)
-        console.log(result)
         //assert
         expect(result.statusCode).toBe(200)
         expect(result.body).not.toBe(undefined)
