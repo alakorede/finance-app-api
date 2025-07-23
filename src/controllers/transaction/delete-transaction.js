@@ -1,4 +1,9 @@
-import { isIdValid, invalidIdResponse, serverReturn } from "../helpers/index.js"
+import {
+    isIdValid,
+    invalidIdResponse,
+    serverReturn,
+    internalServerError,
+} from "../helpers/index.js"
 import { TransactionNotFoundError } from "../../errors/transaction.js"
 
 export class DeleteTransactionController {
@@ -25,7 +30,7 @@ export class DeleteTransactionController {
             if (e instanceof TransactionNotFoundError) {
                 return serverReturn(404, { message: e.message })
             }
-            return serverReturn(500, { message: "Internal Server Error" })
+            return internalServerError()
         }
     }
 }
