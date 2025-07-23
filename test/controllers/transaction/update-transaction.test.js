@@ -220,4 +220,19 @@ describe("UpdateTransactionController", () => {
             httpRequest.body,
         )
     })
+
+    test("Should return error 500 and Internal Error message on Error", async () => {
+        //arrange
+        const { updateTransactionUseCase, sut } = makeSut()
+        jest.spyOn(updateTransactionUseCase, "execute").mockImplementationOnce(
+            async () => {
+                throw new Error()
+            },
+        )
+        //act
+        const result = await sut.execute(httpRequest)
+        //assert
+        expect(result.statusCode).toBe(500)
+        expect(result.body.message).toBe("Internal Server Error")
+    })
 })
