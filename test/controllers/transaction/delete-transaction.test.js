@@ -74,4 +74,17 @@ describe("DeleteTransactionController", () => {
             "Id must be provided and must be an UUID",
         )
     })
+
+    test("Should call DeleteTransactionUseCase with correct params", async () => {
+        //arrange
+        const { deleteTransactionUseCase, sut } = makeSut()
+
+        const executeSpy = jest.spyOn(deleteTransactionUseCase, "execute")
+        //act
+        await sut.execute(httpRequest)
+        //assert
+        expect(executeSpy).toHaveBeenCalledWith(
+            httpRequest.params.transactionId,
+        )
+    })
 })

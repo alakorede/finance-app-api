@@ -21,12 +21,12 @@ describe("GetTransactionsByUserIdController", () => {
     }
 
     const makeSut = () => {
-        const getTransactionsByUserUseCase =
+        const getTransactionsByUserIdUseCase =
             new GetTransactionsByUserIdUseCaseStub()
         const sut = new GetTransactionsByUserIdController(
-            getTransactionsByUserUseCase,
+            getTransactionsByUserIdUseCase,
         )
-        return { getTransactionsByUserUseCase, sut }
+        return { getTransactionsByUserIdUseCase, sut }
     }
 
     const httpRequest = {
@@ -74,10 +74,10 @@ describe("GetTransactionsByUserIdController", () => {
 
     test("Should return StatusCode 404 and User Not Found error when userId do not exists on DB", async () => {
         //arrange
-        const { getTransactionsByUserUseCase, sut } = makeSut()
+        const { getTransactionsByUserIdUseCase, sut } = makeSut()
 
         jest.spyOn(
-            getTransactionsByUserUseCase,
+            getTransactionsByUserIdUseCase,
             "execute",
         ).mockImplementationOnce(() => {
             throw new UserNotFoundError()
@@ -91,10 +91,10 @@ describe("GetTransactionsByUserIdController", () => {
 
     test("Should return StatusCode 500 and related message on Internal Server Error", async () => {
         //arrange
-        const { getTransactionsByUserUseCase, sut } = makeSut()
+        const { getTransactionsByUserIdUseCase, sut } = makeSut()
 
         jest.spyOn(
-            getTransactionsByUserUseCase,
+            getTransactionsByUserIdUseCase,
             "execute",
         ).mockImplementationOnce(() => {
             throw new Error()
@@ -104,5 +104,16 @@ describe("GetTransactionsByUserIdController", () => {
         //assert
         expect(result.statusCode).toBe(500)
         expect(result.body.message).toBe("Internal Server Error")
+    })
+
+    test("Should call GetTransactionByUserIdUseCase with correct params", async () => {
+        //arrange
+        const { getTransactionsByUserIdUseCase, sut } = makeSut()
+
+        const executeSpy = jest.spyOn(getTransactionsByUserIdUseCase, "execute")
+        //act
+        await sut.execute(httpRequest)
+        //assert
+        expect(executeSpy).toHaveBeenCalledWith(httpRequest.query.userId)
     })
 })

@@ -232,4 +232,15 @@ describe("CreateTransacionController", () => {
         expect(result.statusCode).toBe(500)
         expect(result.body.message).toBe("Internal Server Error")
     })
+
+    test("Should call CreateTransactionUseCase with correct params", async () => {
+        //arrange
+        const { createTransactionUseCase, sut } = makeSut()
+
+        const executeSpy = jest.spyOn(createTransactionUseCase, "execute")
+        //act
+        await sut.execute(httpRequest)
+        //assert
+        expect(executeSpy).toHaveBeenCalledWith(httpRequest.body)
+    })
 })
