@@ -25,7 +25,7 @@ export class DeleteTransactionController {
             if (e instanceof TransactionNotFoundError) {
                 return serverReturn(404, { message: e.message })
             }
-            return serverReturn(500, "Internal Server Error")
+            return serverReturn(500, { message: "Internal Server Error" })
         }
     }
 }
