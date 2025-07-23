@@ -176,4 +176,18 @@ describe("UpdateUserController", () => {
             "The provided e-mail is already in use.",
         )
     })
+
+    test("Should call UpdateUserUseCase with correct params", async () => {
+        //arrange
+        const { updateUserUseCase, sut } = makeSut()
+
+        const executeSpy = jest.spyOn(updateUserUseCase, "execute")
+        //act
+        await sut.execute(httpRequest)
+        //assert
+        expect(executeSpy).toHaveBeenCalledWith(
+            httpRequest.params.userId,
+            httpRequest.body,
+        )
+    })
 })
