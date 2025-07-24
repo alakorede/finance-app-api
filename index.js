@@ -72,7 +72,11 @@ app.get("/api/users/:userId", async (request, response) => {
 
 app.patch("/api/users/:userId", async (request, response) => {
     const updateUserRepository = new PostgresUpdateUserRepository()
-    const updateUserUseCase = new UpdateUserUseCase(updateUserRepository)
+    const passwordHasherAdapter = new PasswordHasherAdapter()
+    const updateUserUseCase = new UpdateUserUseCase(
+        updateUserRepository,
+        passwordHasherAdapter,
+    )
     const updateUserController = new UpdateUserController(updateUserUseCase)
 
     const { statusCode, body } = await updateUserController.execute(request)
