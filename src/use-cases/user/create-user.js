@@ -3,9 +3,9 @@ import { PostgresGetUserByEmailRepository } from "../../repositories/postgres/us
 import { EmailAlreadyInUseError } from "../../errors/user.js"
 
 export class CreateUserUseCase {
-    constructor(createUserRepository, bcryptAdapter) {
+    constructor(createUserRepository, passwordHasherAdapter) {
         this.createUserRepository = createUserRepository
-        this.bcryptAdapter = bcryptAdapter
+        this.passwordHasherAdapter = passwordHasherAdapter
     }
     async execute(createUserParams) {
         // Falta: verificar se o e-mail está em uso
@@ -22,9 +22,8 @@ export class CreateUserUseCase {
         }
 
         const userId = uuidv4()
-        const hashedPassword = await this.bcryptAdapter.hash(
+        const hashedPassword = await this.passwordHasherAdapter.hash(
             createUserParams.password,
-            10,
         )
         const user = {
             ...createUserParams,
