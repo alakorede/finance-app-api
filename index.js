@@ -36,15 +36,20 @@ import {
     DeleteTransactionUseCase,
     GetUserBalanceUseCase,
 } from "./src/use-cases/index.js"
+
+import { PasswordHasherAdapter } from "./src/adapters/index.js"
 const app = express()
 app.use(express.json())
 
 // = = = = = = = = = = = = Users = = = = = = = = = = = =
 app.post("/api/users", async (request, response) => {
     const createUserRepository = new PostgresCreateUserRepository()
-    const createUserUseCase = new CreateUserUseCase(createUserRepository)
+    const createUserUseCase = new CreateUserUseCase(
+        createUserRepository,
+        passwordHasherAdapter,
+    )
     const createUserController = new CreateUserController(createUserUseCase)
-
+    const passwordHasherAdapter = new PasswordHasherAdapter()
     const { statusCode, body } = await createUserController.execute(request)
 
     return response.status(statusCode).json(body)
