@@ -1,25 +1,21 @@
-import { PostgresGetUserByEmailRepository } from "../../repositories/postgres/user/get-user-by-email.js"
 import { EmailAlreadyInUseError } from "../../errors/user.js"
 
 export class CreateUserUseCase {
     constructor(
+        getUserByEmailRepository,
         createUserRepository,
         passwordHasherAdapter,
         idGeneratorAdapter,
     ) {
+        this.getUserByEmailRepository = getUserByEmailRepository
         this.createUserRepository = createUserRepository
         this.passwordHasherAdapter = passwordHasherAdapter
         this.idGeneratorAdapter = idGeneratorAdapter
     }
     async execute(createUserParams) {
-        // Falta: verificar se o e-mail está em uso
-        const postgresGetUserByEmailRepository =
-            new PostgresGetUserByEmailRepository()
-
-        const userAlreadyExists =
-            await postgresGetUserByEmailRepository.execute(
-                createUserParams.email,
-            )
+        const userAlreadyExists = await this.getUserByEmailRepository.execute(
+            createUserParams.email,
+        )
 
         if (userAlreadyExists) {
             throw new EmailAlreadyInUseError()

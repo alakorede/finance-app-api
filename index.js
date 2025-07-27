@@ -18,6 +18,7 @@ import {
     PostgresCreateUserRepository,
     PostgresDeleteUserRepository,
     PostgresGetUserByIdRepository,
+    PostgresGetUserByEmailRepository,
     PostgresUpdateUserRepository,
     PostgresCreateTransactionRepository,
     PostgresGetTransactionsByUserIdRepository,
@@ -46,10 +47,12 @@ app.use(express.json())
 
 // = = = = = = = = = = = = Users = = = = = = = = = = = =
 app.post("/api/users", async (request, response) => {
+    const getUserByEmailRepository = new PostgresGetUserByEmailRepository()
     const createUserRepository = new PostgresCreateUserRepository()
     const passwordHasherAdapter = new PasswordHasherAdapter()
     const idGeneratorAdapter = new IdGeneratorAdapter()
     const createUserUseCase = new CreateUserUseCase(
+        getUserByEmailRepository,
         createUserRepository,
         passwordHasherAdapter,
         idGeneratorAdapter,
