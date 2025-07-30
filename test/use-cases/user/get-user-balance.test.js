@@ -87,4 +87,18 @@ describe("GetUserBalanceUseCase", () => {
         //assert
         await expect(promise).rejects.toThrow()
     })
+
+    test("Should throw if GetUserByIdRepository trows", async () => {
+        //arrange
+        const { sut, getUserByIdRepository } = makeSut()
+        jest.spyOn(getUserByIdRepository, "execute").mockRejectedValueOnce(
+            new Error(),
+        )
+
+        //act
+        const promise = sut.execute(faker.string.uuid())
+
+        //assert
+        await expect(promise).rejects.toThrow()
+    })
 })
