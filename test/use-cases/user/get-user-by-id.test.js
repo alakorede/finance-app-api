@@ -32,4 +32,15 @@ describe("GetUserByIdUseCase", () => {
         expect(result).toBeTruthy
         expect(result).toEqual(user)
     })
+
+    test("Should return null when GetUserByIdRepository returns null", async () => {
+        //arrange
+        const { getUserByIdRepository, sut } = makeSut()
+        jest.spyOn(getUserByIdRepository, "execute").mockResolvedValue(null)
+        //act
+        const result = await sut.execute(user.id)
+        //assert
+        expect(result).toBeTruthy
+        expect(result).toEqual(null)
+    })
 })
