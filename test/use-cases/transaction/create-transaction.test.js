@@ -57,4 +57,22 @@ describe("CreateTransactionUseCase", () => {
         //assert
         expect(result).toEqual(transaction)
     })
+
+    test("Should call GetUserByIdRepository with correct params", async () => {
+        //arrange
+        const { sut, getUserByIdRepository } = makeSut()
+        const getUserByIdRepositorySpy = jest.spyOn(
+            getUserByIdRepository,
+            "execute",
+        )
+        //act
+        await sut.execute(transaction)
+        //assert
+        expect(getUserByIdRepositorySpy).toHaveBeenCalledWith(
+            transaction.user_id,
+        )
+    })
+    // test("Should throw UserNotFoundError when GetUserByIdRepository returns empty for user search", async() => {
+
+    // })
 })
