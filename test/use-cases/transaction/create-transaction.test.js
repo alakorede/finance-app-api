@@ -72,6 +72,16 @@ describe("CreateTransactionUseCase", () => {
             transaction.user_id,
         )
     })
+
+    test("Should call IdGeneratorAdapter", async () => {
+        //arrange
+        const { sut, idGeneratorAdapter } = makeSut()
+        const idGeneratorAdapterSpy = jest.spyOn(idGeneratorAdapter, "execute")
+        //act
+        await sut.execute(transaction)
+        //assert
+        expect(idGeneratorAdapterSpy).toHaveBeenCalled()
+    })
     // test("Should throw UserNotFoundError when GetUserByIdRepository returns empty for user search", async() => {
 
     // })
