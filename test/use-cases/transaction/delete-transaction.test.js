@@ -1,0 +1,37 @@
+import { DeleteTransactionUseCase } from "../../../src/use-cases/index.js"
+import { faker } from "@faker-js/faker"
+
+describe("DeleteTransactionUseCase", () => {
+    const transactionId = faker.string.uuid()
+    const transaction = {
+        id: transactionId,
+        user_id: faker.string.uuid(),
+        name: faker.finance.accountName(),
+        date: faker.date.anytime().toISOString(),
+        amount: Number(faker.finance.amount(10, 1000)),
+        type: faker.helpers.arrayElement(["EXPENSE", "INVESTMENT", "EARNING"]),
+    }
+
+    class deleteTransactionRepositoryStub {
+        async execute() {
+            return transaction
+        }
+    }
+
+    const makeSut = () => {
+        const deleteTransactionRepository =
+            new deleteTransactionRepositoryStub()
+        const sut = new DeleteTransactionUseCase(deleteTransactionRepository)
+
+        return { deleteTransactionRepository, sut }
+    }
+
+    test("Should delete a transaction successfully", async () => {
+        //arrange
+        const { sut } = makeSut()
+        //act
+        const result = await sut.execute(transactionId)
+        //assert
+        expect(result).toEqual(transaction)
+    })
+})
