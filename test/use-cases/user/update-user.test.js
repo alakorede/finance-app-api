@@ -29,17 +29,17 @@ describe("UpdateUserUseCase", () => {
     }
 
     const makeSut = () => {
-        const getUserByEmailRepositoryStub = new GetUserByEmailRepositoryStub()
+        const getUserByEmailRepository = new GetUserByEmailRepositoryStub()
         const updateUserRepository = new UpdateUserRepositoryStub()
         const passwordHasherAdapter = new PasswordHasherAdapterStub()
 
         const sut = new UpdateUserUseCase(
             updateUserRepository,
-            getUserByEmailRepositoryStub,
+            getUserByEmailRepository,
             passwordHasherAdapter,
         )
 
-        return { updateUserRepository, sut }
+        return { updateUserRepository, getUserByEmailRepository, sut }
     }
 
     test("Should update user successfully (without e-mail and password)", async () => {
@@ -55,4 +55,31 @@ describe("UpdateUserUseCase", () => {
         expect(result).toBeTruthy
         expect(result).toEqual(user)
     })
+
+    test("Should update user successfully with valid e-mail", async () => {
+        //arrange
+        const { sut, getUserByEmailRepository } = makeSut()
+        const userId = faker.string.uuid()
+
+        const getUserByEmailRepositorySpy = jest.spyOn(
+            getUserByEmailRepository,
+            "execute",
+        )
+
+        const email = faker.internet.email()
+
+        //act
+        const result = await sut.execute(userId, {
+            email,
+        })
+        //assert
+        expect(getUserByEmailRepositorySpy).toHaveBeenCalledWith(email)
+        expect(result).toEqual(user)
+    })
+
+    //invalid email
+    //valid password
+    //invalid password
+    //user does not exists
+    //throw/throws
 })
