@@ -138,9 +138,18 @@ describe("UpdateUserUseCase", () => {
         })
     })
 
-    //invalid email
-    //valid password
-    //invalid password
-    //user does not exists
-    //throw/throws
+    test("Should throw if GetUserByEmailRepository throws", async () => {
+        //arrange
+        const { getUserByEmailRepository, sut } = makeSut()
+        jest.spyOn(getUserByEmailRepository, "execute").mockRejectedValueOnce(
+            new Error(),
+        )
+        //act
+        const promise = sut.execute(faker.string.uuid(), {
+            email: user.email,
+        })
+
+        //assert
+        await expect(promise).rejects.toThrow()
+    })
 })
