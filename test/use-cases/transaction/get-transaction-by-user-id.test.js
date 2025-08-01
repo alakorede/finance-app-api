@@ -1,16 +1,23 @@
 import { GetTransactionsByUserIdUseCase } from "../../../src/use-cases/index.js"
+import { UserNotFoundError } from "../../../src/errors/user.js"
 import { faker } from "@faker-js/faker"
 
 describe("GetTransactionByUserIdUseCase", () => {
     const userId = faker.string.uuid()
 
-    const transaction = {
-        id: faker.string.uuid(),
-        name: faker.finance.accountName(),
-        date: faker.date.anytime().toISOString(),
-        amount: Number(faker.finance.amount(10, 1000)),
-        type: faker.helpers.arrayElement(["EXPENSE", "INVESTMENT", "EARNING"]),
-    }
+    const transactions = [
+        {
+            id: faker.string.uuid(),
+            name: faker.finance.accountName(),
+            date: faker.date.anytime().toISOString(),
+            amount: Number(faker.finance.amount(10, 1000)),
+            type: faker.helpers.arrayElement([
+                "EXPENSE",
+                "INVESTMENT",
+                "EARNING",
+            ]),
+        },
+    ]
 
     class GetUserByIdRepositoryStub {
         async execute(userId) {
@@ -19,10 +26,12 @@ describe("GetTransactionByUserIdUseCase", () => {
     }
     class GetTransactionsByUserIdRepositoryStub {
         async execute(userId) {
-            return {
-                userId: userId,
-                ...transaction,
-            }
+            return [
+                {
+                    userId: userId,
+                    ...transactions[0],
+                },
+            ]
         }
     }
 
@@ -37,12 +46,40 @@ describe("GetTransactionByUserIdUseCase", () => {
 
         return { getUserByIdRepository, getTransactionsByUserIdRepository, sut }
     }
-    test("Should return a transaction successfully", async () => {
+
+    test("Should return user transactions successfully", async () => {
         //arrange
         const { sut } = makeSut()
         //act
         const result = await sut.execute(userId)
         //assert
-        expect(result).toEqual({ userId: userId, ...transaction })
+        expect(result).toEqual([{ userId: userId, ...transactions[0] }])
+    })
+
+    test("Should throw UserNotFoundError if getUserByIdRepository return no user", async () => {
+        //arrange
+        const { sut, getUserByIdRepository } = makeSut()
+        jest.spyOn(getUserByIdRepository, "execute").mockImplementationOnce(
+            () => {
+                return null
+            },
+        )
+        //act
+        const promise = sut.execute(userId)
+        //assert
+        await expect(promise).rejects.toThrow(new UserNotFoundError())
+    })
+
+    test("Should call GetUserByIdRepository with correct params", async () => {
+        //arrange
+        const { sut, getUserByIdRepository } = makeSut()
+        const getUserByIdRepositoryjestSpy = jest.spyOn(
+            getUserByIdRepository,
+            "execute",
+        )
+        //act
+        await sut.execute(userId)
+        //assert
+        expect(getUserByIdRepositoryjestSpy).toHaveBeenCalledWith(userId)
     })
 })
