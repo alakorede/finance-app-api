@@ -96,12 +96,25 @@ describe("CreateTransactionUseCase", () => {
         )
     })
 
-    test("Should throw if idGeneratorAdapter throws", async () => {
+    test("Should throw if GetUserByIdRepository throws", async () => {
         //arrange
         const { getUserByIdRepository, sut } = makeSut()
         jest.spyOn(getUserByIdRepository, "execute").mockRejectedValueOnce(
             new Error(),
         )
+        //act
+        const promise = sut.execute(transaction)
+
+        //assert
+        await expect(promise).rejects.toThrow()
+    })
+
+    test("Should throw if IdGeneratorAdapter throws", async () => {
+        //arrange
+        const { idGeneratorAdapter, sut } = makeSut()
+        jest.spyOn(idGeneratorAdapter, "execute").mockImplementationOnce(() => {
+            throw new Error()
+        })
         //act
         const promise = sut.execute(transaction)
 
