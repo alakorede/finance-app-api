@@ -50,7 +50,16 @@ describe("DeleteTransactionUseCase", () => {
         )
     })
 
-    // test("Should throw if DeleteTransactionRepository throws", async ()=> {
-
-    // })
+    test("Should throw if DeleteTransactionRepository throws", async () => {
+        //arrange
+        const { sut, deleteTransactionRepository } = makeSut()
+        jest.spyOn(
+            deleteTransactionRepository,
+            "execute",
+        ).mockRejectedValueOnce(new Error())
+        //act
+        const promise = sut.execute(transactionId)
+        //assert
+        await expect(promise).rejects.toThrow()
+    })
 })
