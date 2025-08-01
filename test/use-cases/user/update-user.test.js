@@ -115,6 +115,29 @@ describe("UpdateUserUseCase", () => {
         await expect(promise).rejects.toThrow(new EmailAlreadyInUseError())
     })
 
+    test("Should call UpdateUserReopository with correct params", async () => {
+        //arrange
+        const { sut, updateUserRepository } = makeSut()
+        const updateUserRepositorySpy = jest.spyOn(
+            updateUserRepository,
+            "execute",
+        )
+        //act
+        await sut.execute(user.id, {
+            first_name: user.first_name,
+            last_name: user.last_name,
+            email: user.email,
+            password: user.password,
+        })
+        //assert
+        expect(updateUserRepositorySpy).toHaveBeenCalledWith(user.id, {
+            first_name: user.first_name,
+            last_name: user.last_name,
+            email: user.email,
+            password: "hashed_password",
+        })
+    })
+
     //invalid email
     //valid password
     //invalid password
