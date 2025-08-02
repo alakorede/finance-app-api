@@ -193,6 +193,7 @@ const config = {
 
     // Whether to use watchman for file crawling
     // watchman: true,
+    globalSetup: "<rootDir>/jest.global-setup.js",
 }
 
 export default config
