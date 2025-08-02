@@ -4,7 +4,7 @@ const config = {
     coverageDirectory: "coverage",
     coverageProvider: "v8",
     globalSetup: "<rootDir>/jest.global-setup.js",
-    setupFileAfterEnv: ["<rootDir>/jest.setup-after-env.js"],
+    setupFilesAfterEnv: ["<rootDir>/jest.setup-after-env.js"],
 }
 
 export default config
