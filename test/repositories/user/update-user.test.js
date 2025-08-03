@@ -66,4 +66,16 @@ describe("PostgresUpdateUserRepository", () => {
             },
         })
     })
+
+    test("Should return null if prisma.findUnique returns null", async () => {
+        await prisma.user.create({
+            data: user,
+        })
+        const sut = new PostgresUpdateUserRepository()
+        jest.spyOn(prisma.user, "findUnique").mockResolvedValue(null)
+
+        const result = await sut.execute(user.id, updateUserParams)
+
+        expect(result).toBe(null)
+    })
 })
