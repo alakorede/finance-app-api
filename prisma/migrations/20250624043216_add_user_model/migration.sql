@@ -34,12 +34,12 @@ ALTER TABLE "Transaction" ADD CONSTRAINT "Transaction_user_id_fkey" FOREIGN KEY 
 -- Create the view
 CREATE VIEW user_balance_view AS
 SELECT
-	user_id,
-	SUM(CASE WHEN type = 'EARNING' THEN amount ELSE 0 END) AS earnings,
-	SUM(CASE WHEN type = 'EXPENSE' THEN amount ELSE 0 END) AS expenses,
-	SUM(CASE WHEN type = 'INVESTMENT' THEN amount ELSE 0 END) AS investments,
-	SUM(CASE WHEN type = 'EARNING' THEN amount ELSE 0 END)
-		- SUM(CASE WHEN type = 'EXPENSE' THEN amount ELSE 0 END)
-		- SUM(CASE WHEN type = 'INVESTMENT' THEN amount ELSE 0 END) AS balance
+    user_id,
+    SUM(CASE WHEN type = 'EARNING' THEN amount ELSE 0 END) AS earnings,
+    SUM(CASE WHEN type = 'EXPENSE' THEN amount ELSE 0 END) AS expenses,
+    SUM(CASE WHEN type = 'INVESTMENT' THEN amount ELSE 0 END) AS investments,
+    SUM(CASE WHEN type = 'EARNING' THEN amount ELSE 0 END)
+        - SUM(CASE WHEN type = 'EXPENSE' THEN amount ELSE 0 END)
+        - SUM(CASE WHEN type = 'INVESTMENT' THEN amount ELSE 0 END) AS balance
 FROM "Transaction"
 GROUP BY user_id;
