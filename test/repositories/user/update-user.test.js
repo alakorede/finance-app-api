@@ -50,4 +50,20 @@ describe("PostgresUpdateUserRepository", () => {
             data: updateUserParams,
         })
     })
+
+    test("Should call prisma findUnique with correct params to check if the user exists on db", async () => {
+        await prisma.user.create({
+            data: user,
+        })
+        const sut = new PostgresUpdateUserRepository()
+        const prismaSpy = jest.spyOn(prisma.user, "findUnique")
+
+        await sut.execute(user.id, updateUserParams)
+
+        expect(prismaSpy).toHaveBeenCalledWith({
+            where: {
+                id: user.id,
+            },
+        })
+    })
 })
