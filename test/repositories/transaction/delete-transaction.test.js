@@ -40,4 +40,16 @@ describe("PostgresDeleteTransactionRepository", () => {
         expect(Number(result.amount)).toBe(transaction.amount)
         expect(result.type).toBe(transaction.type)
     })
+
+    test("Should call prisma with correct params", async () => {
+        const prismaSpy = jest.spyOn(prisma.transaction, "delete")
+
+        const sut = new PostgresDeleteTransactionRepository()
+
+        await sut.execute(transaction.id)
+
+        expect(prismaSpy).toHaveBeenCalledWith({
+            where: { id: transaction.id },
+        })
+    })
 })
