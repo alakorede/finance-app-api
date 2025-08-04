@@ -53,4 +53,16 @@ describe("PostgresGetTransactionByUserId", () => {
 
         expect(result).toEqual([])
     })
+
+    test("Should call prisma with correct params", async () => {
+        const prismaSpy = jest.spyOn(prisma.transaction, "findMany")
+
+        const sut = new PostgresGetTransactionsByUserIdRepository()
+
+        await sut.execute(user.id)
+
+        expect(prismaSpy).toHaveBeenCalledWith({
+            where: { user_id: user.id },
+        })
+    })
 })
