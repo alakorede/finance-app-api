@@ -33,4 +33,26 @@ describe("UserRoutes E2E Tests", () => {
         expect(response.body.last_name).toBe(createdUser.last_name)
         expect(response.body.email).toBe(createdUser.email)
     })
+
+    test("PATCH /api/users/:userId should return 200 and userData up to date when user is updated", async () => {
+        const { body: createdUser } = await request(app)
+            .post("/api/users")
+            .send(userData)
+        const updateUser = {
+            first_name: faker.person.firstName(),
+            last_name: faker.person.lastName(),
+            email: faker.internet.email(),
+            password: faker.internet.password({ length: 7 }),
+        }
+        const response = await request(app)
+            .patch(`/api/users/${createdUser.id}`)
+            .send(updateUser)
+
+        expect(response.status).toBe(200)
+        expect(response.body.id).toBe(createdUser.id)
+        expect(response.body.password).not.toBe(createdUser.password)
+        expect(response.body.first_name).toBe(updateUser.first_name)
+        expect(response.body.last_name).toBe(updateUser.last_name)
+        expect(response.body.email).toBe(updateUser.email)
+    })
 })
