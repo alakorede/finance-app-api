@@ -3,8 +3,8 @@
 // garantindo que o acesso do process.env esteja disponível pra todo o dódigo
 import "dotenv/config.js"
 import express from "express"
-import { usersRouter } from "./src/routes/users.js"
-import { transactionsRouter } from "./src/routes/transactions.js"
+import { usersRouter, transactionsRouter } from "./src/routes/index.js"
+
 const app = express()
 app.use(express.json())
 
