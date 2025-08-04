@@ -44,4 +44,13 @@ describe("PostgresGetTransactionByUserId", () => {
         expect(Number(result[0].amount)).toBe(transaction.amount)
         expect(result[0].type).toBe(transaction.type)
     })
+
+    test("Should return an empty array if there is no transaction related to user on db", async () => {
+        await prisma.user.create({ data: user })
+        const sut = new PostgresGetTransactionsByUserIdRepository()
+
+        const result = await sut.execute(user.id)
+
+        expect(result).toEqual([])
+    })
 })
