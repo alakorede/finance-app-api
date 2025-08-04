@@ -2,14 +2,8 @@
 //Isso garante que ele é importado antes de tudo e que a configuração dele é feita antes de tudo,
 // garantindo que o acesso do process.env esteja disponível pra todo o dódigo
 import "dotenv/config.js"
-import express from "express"
-import { usersRouter, transactionsRouter } from "./src/routes/index.js"
 
-export const app = express()
-app.use(express.json())
-
-app.use(usersRouter)
-app.use(transactionsRouter)
+import { app } from "./src/app.js"
 
 app.listen(process.env.API_PORT, () =>
     console.log(`Listening on port ${process.env.API_PORT}`),
