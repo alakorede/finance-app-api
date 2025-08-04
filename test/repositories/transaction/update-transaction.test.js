@@ -21,22 +21,18 @@ describe("PostgresUpdateTransactionRepository", () => {
         type: faker.helpers.arrayElement(["EXPENSE", "INVESTMENT", "EARNING"]),
     }
 
+    const updateTransactionData = {
+        name: faker.finance.accountName(),
+        date: faker.date.anytime().toISOString(),
+        amount: Number(faker.finance.amount(10, 1000)),
+        type: faker.helpers.arrayElement(["EXPENSE", "INVESTMENT", "EARNING"]),
+    }
+
     test("Should update a transaction on db", async () => {
         await prisma.user.create({ data: user })
         await prisma.transaction.create({ data: transaction })
 
         const sut = new PostgresUpdateTransactionRepository()
-
-        const updateTransactionData = {
-            name: faker.finance.accountName(),
-            date: faker.date.anytime().toISOString(),
-            amount: Number(faker.finance.amount(10, 1000)),
-            type: faker.helpers.arrayElement([
-                "EXPENSE",
-                "INVESTMENT",
-                "EARNING",
-            ]),
-        }
 
         const result = await sut.execute(transaction.id, updateTransactionData)
 
@@ -54,5 +50,20 @@ describe("PostgresUpdateTransactionRepository", () => {
         )
         expect(Number(result.amount)).toBe(updateTransactionData.amount)
         expect(result.type).toBe(updateTransactionData.type)
+    })
+
+    test("Should call prisma with correct params", async () => {
+        const prismaSpy = jest.spyOn(prisma.transaction, "update")
+
+        const sut = new PostgresUpdateTransactionRepository()
+
+        await sut.execute(transaction.id, updateTransactionData)
+
+        expect(prismaSpy).toHaveBeenCalledWith({
+            where: {
+                id: transaction.id,
+            },
+            data: updateTransactionData,
+        })
     })
 })
