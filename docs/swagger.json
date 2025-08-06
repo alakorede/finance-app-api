@@ -175,6 +175,50 @@
                     }
                 }
             }
+        },
+        "/api/transactions": {
+            "get": {},
+            "post": {
+                "summary": "Create a new Transaction",
+                "tags": ["Transaction"],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "required": "true",
+                        "schema": {
+                            "$ref": "#/definitions/CreateTransactionParams"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Transaction created successfully",
+                        "schema": {
+                            "$ref": "#/definitions/Transaction"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid parameters"
+                    },
+                    "404": {
+                        "description": "User Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/UserNotFoundResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/InternalServerErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/transaction/{transactionId}": {
+            "delete": {},
+            "patch": {}
         }
     },
     "definitions": {
@@ -246,6 +290,62 @@
                 "balance": {
                     "type": "string",
                     "example": "45000"
+                }
+            }
+        },
+        "CreateTransactionParams": {
+            "type": "object",
+            "properties": {
+                "user_id": {
+                    "type": "string",
+                    "example": "f70361c5-1b2c-4d70-ab01-596ac522c4ef"
+                },
+                "name": {
+                    "type": "String",
+                    "example": "Salary"
+                },
+                "date": {
+                    "type": "String",
+                    "example": "2023-12-14T18:45:01.906Z"
+                },
+                "amount": {
+                    "type": "Number",
+                    "example": 10000.0
+                },
+                "type": {
+                    "type": "string",
+                    "example": "EARNING",
+                    "description": "EARNING, EXPENSE, INVESTMENT"
+                }
+            }
+        },
+        "Transaction": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "example": "3abf50d6-392f-4181-a8a8-ad3aa05971ff"
+                },
+                "user_id": {
+                    "type": "string",
+                    "example": "f70361c5-1b2c-4d70-ab01-596ac522c4ef"
+                },
+                "name": {
+                    "type": "String",
+                    "example": "Salary"
+                },
+                "date": {
+                    "type": "String",
+                    "example": "2023-12-14T18:45:01.906Z"
+                },
+                "amount": {
+                    "type": "string",
+                    "example": "10000"
+                },
+                "type": {
+                    "type": "string",
+                    "example": "EARNING",
+                    "description": "EARNING, EXPENSE, INVESTMENT"
                 }
             }
         },
