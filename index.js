@@ -3,7 +3,7 @@
 // garantindo que o acesso do process.env esteja disponível pra todo o dódigo
 import "dotenv/config.js"
 
-import { app } from "./src/app.js"
+import { app } from "./src/app.cjs"
 
 app.listen(process.env.API_PORT, () =>
     console.log(`Listening on port ${process.env.API_PORT}`),

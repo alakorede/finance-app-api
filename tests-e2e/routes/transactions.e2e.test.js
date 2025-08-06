@@ -1,5 +1,5 @@
 import request from "supertest"
-import { app } from "../../src/app.js"
+import { app } from "../../src/app.cjs"
 import { faker } from "@faker-js/faker"
 import dayjs from "dayjs"
 
