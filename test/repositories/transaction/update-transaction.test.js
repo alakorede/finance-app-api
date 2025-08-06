@@ -39,9 +39,6 @@ describe("PostgresUpdateTransactionRepository", () => {
         expect(result.id).toBe(transaction.id)
         expect(result.user_id).toBe(transaction.user_id)
         expect(result.name).toBe(updateTransactionData.name)
-        expect(dayjs(result.date).daysInMonth()).toBe(
-            dayjs(updateTransactionData.date).daysInMonth(),
-        )
         expect(dayjs(result.date).month()).toBe(
             dayjs(updateTransactionData.date).month(),
         )

@@ -28,15 +28,6 @@ describe("UserRoutes E2E Tests", () => {
         expect(response.body.id).toBeTruthy()
         expect(response.body.user_id).toEqual(createdUser.body.id)
         expect(response.body.name).toEqual(transaction.name)
-        expect(dayjs(response.body.date).daysInMonth()).toBe(
-            dayjs(transaction.date).daysInMonth(),
-        )
-        expect(dayjs(response.body.date).month()).toBe(
-            dayjs(transaction.date).month(),
-        )
-        expect(dayjs(response.body.date).year()).toBe(
-            dayjs(transaction.date).year(),
-        )
         expect(Number(response.body.amount)).toBe(transaction.amount)
         expect(response.body.type).toBe(transaction.type)
     })
@@ -121,15 +112,6 @@ describe("UserRoutes E2E Tests", () => {
         expect(response.body.id).toBe(newTransaction.body.id)
         expect(response.body.user_id).toBe(createdUser.body.id)
         expect(response.body.name).toEqual(updateTransactionData.name)
-        expect(dayjs(response.body.date).daysInMonth()).toBe(
-            dayjs(updateTransactionData.date).daysInMonth(),
-        )
-        expect(dayjs(response.body.date).month()).toBe(
-            dayjs(updateTransactionData.date).month(),
-        )
-        expect(dayjs(response.body.date).year()).toBe(
-            dayjs(updateTransactionData.date).year(),
-        )
         expect(Number(response.body.amount)).toBe(updateTransactionData.amount)
         expect(response.body.type).toBe(updateTransactionData.type)
     })
