@@ -14,7 +14,7 @@
                     {
                         "in": "body",
                         "name": "body",
-                        "required": "true",
+                        "required": true,
                         "schema": { "$ref": "#/definitions/CreateUserParams" }
                     }
                 ],
@@ -42,7 +42,7 @@
                     {
                         "in": "path",
                         "name": "userId",
-                        "required": "true",
+                        "required": true,
                         "type": "string",
                         "description": "user's ID to get"
                     }
@@ -75,7 +75,7 @@
                     {
                         "in": "path",
                         "name": "userId",
-                        "required": "true",
+                        "required": true,
                         "type": "string",
                         "description": "user's ID to be deleted"
                     }
@@ -108,14 +108,14 @@
                     {
                         "in": "path",
                         "name": "userId",
-                        "required": "true",
+                        "required": true,
                         "type": "string",
                         "description": "user's ID to be udated"
                     },
                     {
                         "in": "body",
                         "name": "body",
-                        "required": "true",
+                        "required": true,
                         "schema": { "$ref": "#/definitions/CreateUserParams" }
                     }
                 ],
@@ -149,7 +149,7 @@
                     {
                         "in": "path",
                         "name": "userId",
-                        "required": "true",
+                        "required": true,
                         "type": "string",
                         "description": "user's ID to get balance"
                     }
@@ -177,7 +177,42 @@
             }
         },
         "/api/transactions": {
-            "get": {},
+            "get": {
+                "summary": "Get user Transactions by User Id",
+                "tags": ["Transaction"],
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "userId",
+                        "required": true,
+                        "type": "string",
+                        "description": "user's ID to get transactions"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Transaction created successfully",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Transaction"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "User Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/UserNotFoundResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/InternalServerErrorResponse"
+                        }
+                    }
+                }
+            },
             "post": {
                 "summary": "Create a new Transaction",
                 "tags": ["Transaction"],
@@ -185,7 +220,7 @@
                     {
                         "in": "body",
                         "name": "body",
-                        "required": "true",
+                        "required": true,
                         "schema": {
                             "$ref": "#/definitions/CreateTransactionParams"
                         }
