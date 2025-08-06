@@ -140,6 +140,41 @@
                     }
                 }
             }
+        },
+        "/api/users/{userId}/balance": {
+            "get": {
+                "tags": ["User"],
+                "summary": "Get user balance by user ID",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "userId",
+                        "required": "true",
+                        "type": "string",
+                        "description": "user's ID to get balance"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User found and has transactions to calculate balance",
+                        "schema": {
+                            "$ref": "#/definitions/UserBalance"
+                        }
+                    },
+                    "404": {
+                        "description": "User Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/UserNotFoundResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/InternalServerErrorResponse"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -186,6 +221,31 @@
                 "password": {
                     "type": "String",
                     "example": "IKilledThemAll"
+                }
+            }
+        },
+        "UserBalance": {
+            "type": "object",
+            "properties": {
+                "user_id": {
+                    "type": "string",
+                    "example": "f70361c5-1b2c-4d70-ab01-596ac522c4ef"
+                },
+                "earnings": {
+                    "type": "string",
+                    "example": "60000"
+                },
+                "expenses": {
+                    "type": "string",
+                    "example": "15000"
+                },
+                "investments": {
+                    "type": "string",
+                    "example": "0"
+                },
+                "balance": {
+                    "type": "string",
+                    "example": "45000"
                 }
             }
         },
