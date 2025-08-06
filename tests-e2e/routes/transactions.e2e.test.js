@@ -40,4 +40,31 @@ describe("UserRoutes E2E Tests", () => {
         expect(Number(response.body.amount)).toBe(transaction.amount)
         expect(response.body.type).toBe(transaction.type)
     })
+
+    test("GET /api/transaction should return 200 and the transaction data on body", async () => {
+        const createdUser = await request(app).post("/api/users").send(userData)
+        const newTransaction = await request(app)
+            .post("/api/transactions")
+            .send({ user_id: createdUser.body.id, ...transaction })
+
+        const response = await request(app).get(
+            `/api/transactions?userId=${createdUser.body.id}`,
+        )
+
+        expect(response.status).toBe(200)
+        expect(response.body[0].id).toBe(newTransaction.body.id)
+        expect(response.body[0].user_id).toBe(createdUser.body.id)
+        expect(response.body[0].name).toEqual(newTransaction.body.name)
+        expect(dayjs(response.body[0].date).daysInMonth()).toBe(
+            dayjs(newTransaction.body.date).daysInMonth(),
+        )
+        expect(dayjs(response.body[0].date).month()).toBe(
+            dayjs(newTransaction.body.date).month(),
+        )
+        expect(dayjs(response.body[0].date).year()).toBe(
+            dayjs(newTransaction.body.date).year(),
+        )
+        expect(response.body[0].amount).toBe(newTransaction.body.amount)
+        expect(response.body[0].type).toBe(newTransaction.body.type)
+    })
 })
