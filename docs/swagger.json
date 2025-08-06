@@ -251,8 +251,40 @@
                 }
             }
         },
-        "/api/transaction/{transactionId}": {
-            "delete": {},
+        "/api/transactions/{transactionId}": {
+            "delete": {
+                "summary": "Deletes Transaction by ID",
+                "tags": ["Transaction"],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "transactionId",
+                        "required": true,
+                        "type": "string",
+                        "description": "transaction's ID to be deleted"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Transaction created successfully",
+                        "schema": {
+                            "$ref": "#/definitions/Transaction"
+                        }
+                    },
+                    "404": {
+                        "description": "Transaction Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/TransactionNotFoundResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/InternalServerErrorResponse"
+                        }
+                    }
+                }
+            },
             "patch": {
                 "summary": "Updates Transaction by ID",
                 "tags": ["Transaction"],
@@ -284,7 +316,7 @@
                         "description": "Invalid parameters"
                     },
                     "404": {
-                        "description": "User Not Found",
+                        "description": "Transaction Not Found",
                         "schema": {
                             "$ref": "#/definitions/TransactionNotFoundResponse"
                         }
