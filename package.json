@@ -17,12 +17,9 @@
     "author": "Luìz Moraes",
     "license": "ISC",
     "devDependencies": {
-        "@babel/core": "^7.28.0",
-        "@babel/preset-env": "^7.28.0",
         "@eslint/js": "^9.29.0",
         "@faker-js/faker": "^9.9.0",
         "@types/jest": "^30.0.0",
-        "babel-jest": "^30.0.4",
         "eslint": "^9.29.0",
         "eslint-config-prettier": "^10.1.5",
         "git-commit": "^0.0.3",
