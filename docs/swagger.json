@@ -253,7 +253,50 @@
         },
         "/api/transaction/{transactionId}": {
             "delete": {},
-            "patch": {}
+            "patch": {
+                "summary": "Updates Transaction by ID",
+                "tags": ["Transaction"],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "transactionId",
+                        "required": true,
+                        "type": "string",
+                        "description": "transaction's ID to be updated"
+                    },
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/UpdateTransactionParams"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Transaction created successfully",
+                        "schema": {
+                            "$ref": "#/definitions/Transaction"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid parameters"
+                    },
+                    "404": {
+                        "description": "User Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/TransactionNotFoundResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/InternalServerErrorResponse"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -354,6 +397,28 @@
                 }
             }
         },
+        "UpdateTransactionParams": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "String",
+                    "example": "Salary"
+                },
+                "date": {
+                    "type": "String",
+                    "example": "2023-12-14T18:45:01.906Z"
+                },
+                "amount": {
+                    "type": "Number",
+                    "example": 10000.0
+                },
+                "type": {
+                    "type": "string",
+                    "example": "EARNING",
+                    "description": "EARNING, EXPENSE, INVESTMENT"
+                }
+            }
+        },
         "Transaction": {
             "type": "object",
             "properties": {
@@ -399,6 +464,15 @@
                 "message": {
                     "type": "string",
                     "example": "User Not Found"
+                }
+            }
+        },
+        "TransactionNotFoundResponse": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string",
+                    "example": "Transaction Not Found"
                 }
             }
         }
