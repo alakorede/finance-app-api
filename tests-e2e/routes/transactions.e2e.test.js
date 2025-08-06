@@ -67,4 +67,70 @@ describe("UserRoutes E2E Tests", () => {
         expect(response.body[0].amount).toBe(newTransaction.body.amount)
         expect(response.body[0].type).toBe(newTransaction.body.type)
     })
+
+    test("DELETE /api/transaction should return 200 and transaction on body when a transaction is deleted", async () => {
+        const createdUser = await request(app).post("/api/users").send(userData)
+        const newTransaction = await request(app)
+            .post("/api/transactions")
+            .send({ user_id: createdUser.body.id, ...transaction })
+        console.log(`A transaction criada foi ${newTransaction.body.id}`)
+        const response = await request(app).delete(
+            `/api/transactions/${newTransaction.body.id}`,
+        )
+
+        expect(response.status).toBe(200)
+        expect(response.body.id).toBe(newTransaction.body.id)
+        expect(response.body.user_id).toBe(createdUser.body.id)
+        expect(response.body.name).toEqual(newTransaction.body.name)
+        expect(dayjs(response.body.date).daysInMonth()).toBe(
+            dayjs(newTransaction.body.date).daysInMonth(),
+        )
+        expect(dayjs(response.body.date).month()).toBe(
+            dayjs(newTransaction.body.date).month(),
+        )
+        expect(dayjs(response.body.date).year()).toBe(
+            dayjs(newTransaction.body.date).year(),
+        )
+        expect(response.body.amount).toBe(newTransaction.body.amount)
+        expect(response.body.type).toBe(newTransaction.body.type)
+    })
+
+    test("UPDATE /api/transaction should return 200 and transaction on body with updated data when a transaction is updated", async () => {
+        const updateTransactionData = {
+            name: faker.finance.accountName(),
+            date: faker.date.anytime().toISOString(),
+            amount: Number(faker.finance.amount(10, 1000)),
+            type: faker.helpers.arrayElement([
+                "EXPENSE",
+                "INVESTMENT",
+                "EARNING",
+            ]),
+        }
+
+        const createdUser = await request(app).post("/api/users").send(userData)
+        const newTransaction = await request(app)
+            .post("/api/transactions")
+            .send({ user_id: createdUser.body.id, ...transaction })
+        console.log(`A transaction criada foi ${newTransaction.body.id}`)
+
+        const response = await request(app)
+            .patch(`/api/transactions/${newTransaction.body.id}`)
+            .send(updateTransactionData)
+
+        expect(response.status).toBe(200)
+        expect(response.body.id).toBe(newTransaction.body.id)
+        expect(response.body.user_id).toBe(createdUser.body.id)
+        expect(response.body.name).toEqual(updateTransactionData.name)
+        expect(dayjs(response.body.date).daysInMonth()).toBe(
+            dayjs(updateTransactionData.date).daysInMonth(),
+        )
+        expect(dayjs(response.body.date).month()).toBe(
+            dayjs(updateTransactionData.date).month(),
+        )
+        expect(dayjs(response.body.date).year()).toBe(
+            dayjs(updateTransactionData.date).year(),
+        )
+        expect(Number(response.body.amount)).toBe(updateTransactionData.amount)
+        expect(response.body.type).toBe(updateTransactionData.type)
+    })
 })
