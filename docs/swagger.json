@@ -57,13 +57,7 @@
                     "404": {
                         "description": "User Not Found",
                         "schema": {
-                            "type": "object",
-                            "properties": {
-                                "message": {
-                                    "type": "string",
-                                    "example": "User Not Found"
-                                }
-                            }
+                            "$ref": "#/definitions/UserNotFoundResponse"
                         }
                     },
                     "500": {
@@ -96,13 +90,7 @@
                     "404": {
                         "description": "User Not Found",
                         "schema": {
-                            "type": "object",
-                            "properties": {
-                                "message": {
-                                    "type": "string",
-                                    "example": "User Not Found"
-                                }
-                            }
+                            "$ref": "#/definitions/UserNotFoundResponse"
                         }
                     },
                     "500": {
@@ -168,6 +156,15 @@
                 "message": {
                     "type": "string",
                     "example": "Internal server error"
+                }
+            }
+        },
+        "UserNotFoundResponse": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string",
+                    "example": "User Not Found"
                 }
             }
         }
