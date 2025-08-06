@@ -28,7 +28,7 @@ describe("PostgresDeleteUserRepository", () => {
             data: user,
         })
         const sut = new PostgresDeleteUserRepository()
-        const prismaSpy = jest.spyOn(prisma.user, "delete")
+        const prismaSpy = import.meta.jest.spyOn(prisma.user, "delete")
 
         await sut.execute(user.id)
 
@@ -44,7 +44,9 @@ describe("PostgresDeleteUserRepository", () => {
             data: user,
         })
         const sut = new PostgresDeleteUserRepository()
-        jest.spyOn(prisma.user, "delete").mockRejectedValueOnce(new Error())
+        import.meta.jest
+            .spyOn(prisma.user, "delete")
+            .mockRejectedValueOnce(new Error())
 
         const promise = sut.execute(user.id)
         await expect(promise).resolves.toBe(null)

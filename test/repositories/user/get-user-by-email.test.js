@@ -26,7 +26,7 @@ describe("PostgresGetUserByEmailRepository", () => {
         const sut = new PostgresGetUserByEmailRepository()
         const email = faker.internet.email()
 
-        const prismaSpy = jest.spyOn(prisma.user, "findUnique")
+        const prismaSpy = import.meta.jest.spyOn(prisma.user, "findUnique")
 
         await sut.execute(email)
 

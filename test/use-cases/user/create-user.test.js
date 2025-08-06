@@ -71,9 +71,9 @@ describe("CreateUserUseCase", () => {
     test("Should return throw EmailAlreadyInUseError if GetUserByEmailRepository returns a user on search", async () => {
         //arrange
         const { getUserByEmailRepository, sut } = makeSut()
-        jest.spyOn(getUserByEmailRepository, "execute").mockReturnValueOnce(
-            createUserParams,
-        )
+        import.meta.jest
+            .spyOn(getUserByEmailRepository, "execute")
+            .mockReturnValueOnce(createUserParams)
         //act
         const promise = sut.execute(createUserParams)
         //assert
@@ -83,8 +83,11 @@ describe("CreateUserUseCase", () => {
     test("Should call IdGeneratorAdapter to generate a random id and pass the new id to CreateUserRepository", async () => {
         //arrange
         const { idGeneratorAdapter, createUserRepository, sut } = makeSut()
-        const idGeneratorSpy = jest.spyOn(idGeneratorAdapter, "execute")
-        const createUserRepositorySpy = jest.spyOn(
+        const idGeneratorSpy = import.meta.jest.spyOn(
+            idGeneratorAdapter,
+            "execute",
+        )
+        const createUserRepositorySpy = import.meta.jest.spyOn(
             createUserRepository,
             "execute",
         )
@@ -104,11 +107,11 @@ describe("CreateUserUseCase", () => {
     test("Should call PasswordHasherAdapter to generate a random id and pass the password to CreateUserRepository", async () => {
         //arrange
         const { passwordHasherAdapter, createUserRepository, sut } = makeSut()
-        const passwordHasherAdapterSpy = jest.spyOn(
+        const passwordHasherAdapterSpy = import.meta.jest.spyOn(
             passwordHasherAdapter,
             "hash",
         )
-        const createUserRepositorySpy = jest.spyOn(
+        const createUserRepositorySpy = import.meta.jest.spyOn(
             createUserRepository,
             "execute",
         )
@@ -128,9 +131,9 @@ describe("CreateUserUseCase", () => {
     test("Should throw if GetUserByEmailRepository trows", async () => {
         //arrange
         const { getUserByEmailRepository, sut } = makeSut()
-        jest.spyOn(getUserByEmailRepository, "execute").mockRejectedValueOnce(
-            new Error(),
-        )
+        import.meta.jest
+            .spyOn(getUserByEmailRepository, "execute")
+            .mockRejectedValueOnce(new Error())
 
         //act
         const promise = sut.execute(createUserParams)
@@ -142,9 +145,11 @@ describe("CreateUserUseCase", () => {
     test("Should throw if IdGeneratorAdapter trows", async () => {
         //arrange
         const { idGeneratorAdapter, sut } = makeSut()
-        jest.spyOn(idGeneratorAdapter, "execute").mockImplementationOnce(() => {
-            throw new Error()
-        })
+        import.meta.jest
+            .spyOn(idGeneratorAdapter, "execute")
+            .mockImplementationOnce(() => {
+                throw new Error()
+            })
 
         //act
         const promise = sut.execute(createUserParams)
@@ -156,9 +161,11 @@ describe("CreateUserUseCase", () => {
     test("Should throw if IdGeneratorAdapter trows", async () => {
         //arrange
         const { passwordHasherAdapter, sut } = makeSut()
-        jest.spyOn(passwordHasherAdapter, "hash").mockImplementationOnce(() => {
-            throw new Error()
-        })
+        import.meta.jest
+            .spyOn(passwordHasherAdapter, "hash")
+            .mockImplementationOnce(() => {
+                throw new Error()
+            })
 
         //act
         const promise = sut.execute(createUserParams)
@@ -170,11 +177,11 @@ describe("CreateUserUseCase", () => {
     test("Should throw if createUserRepository trows", async () => {
         //arrange
         const { createUserRepository, sut } = makeSut()
-        jest.spyOn(createUserRepository, "execute").mockImplementationOnce(
-            () => {
+        import.meta.jest
+            .spyOn(createUserRepository, "execute")
+            .mockImplementationOnce(() => {
                 throw new Error()
-            },
-        )
+            })
 
         //act
         const promise = sut.execute(createUserParams)

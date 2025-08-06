@@ -36,7 +36,9 @@ describe("GetUserByIdUseCase", () => {
     test("Should return null when GetUserByIdRepository returns null", async () => {
         //arrange
         const { getUserByIdRepository, sut } = makeSut()
-        jest.spyOn(getUserByIdRepository, "execute").mockResolvedValueOnce(null)
+        import.meta.jest
+            .spyOn(getUserByIdRepository, "execute")
+            .mockResolvedValueOnce(null)
         //act
         const result = await sut.execute(user.id)
         //assert
@@ -47,9 +49,9 @@ describe("GetUserByIdUseCase", () => {
     test("Should return throw when GetUserByIdRepository throws", async () => {
         //arrange
         const { getUserByIdRepository, sut } = makeSut()
-        jest.spyOn(getUserByIdRepository, "execute").mockRejectedValueOnce(
-            new Error(),
-        )
+        import.meta.jest
+            .spyOn(getUserByIdRepository, "execute")
+            .mockRejectedValueOnce(new Error())
         //act
         const promise = sut.execute(faker.string.uuid())
 

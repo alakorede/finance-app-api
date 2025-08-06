@@ -39,7 +39,7 @@ describe("PostgresUpdateUserRepository", () => {
             data: user,
         })
         const sut = new PostgresUpdateUserRepository()
-        const prismaSpy = jest.spyOn(prisma.user, "update")
+        const prismaSpy = import.meta.jest.spyOn(prisma.user, "update")
 
         await sut.execute(user.id, updateUserParams)
 
@@ -56,7 +56,7 @@ describe("PostgresUpdateUserRepository", () => {
             data: user,
         })
         const sut = new PostgresUpdateUserRepository()
-        const prismaSpy = jest.spyOn(prisma.user, "findUnique")
+        const prismaSpy = import.meta.jest.spyOn(prisma.user, "findUnique")
 
         await sut.execute(user.id, updateUserParams)
 
@@ -72,7 +72,9 @@ describe("PostgresUpdateUserRepository", () => {
             data: user,
         })
         const sut = new PostgresUpdateUserRepository()
-        jest.spyOn(prisma.user, "findUnique").mockResolvedValue(null)
+        import.meta.jest
+            .spyOn(prisma.user, "findUnique")
+            .mockResolvedValue(null)
 
         const result = await sut.execute(user.id, updateUserParams)
 

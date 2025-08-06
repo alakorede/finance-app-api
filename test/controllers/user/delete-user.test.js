@@ -65,9 +65,11 @@ describe("DeleteUserController", () => {
         //arrange
         const { deleteUserUseCase, sut } = makeSut()
 
-        jest.spyOn(deleteUserUseCase, "execute").mockImplementationOnce(() => {
-            throw new Error()
-        })
+        import.meta.jest
+            .spyOn(deleteUserUseCase, "execute")
+            .mockImplementationOnce(() => {
+                throw new Error()
+            })
         //act
         const result = await sut.execute(httpRequest)
         //assert
@@ -78,7 +80,9 @@ describe("DeleteUserController", () => {
         //arrange
         const { deleteUserUseCase, sut } = makeSut()
 
-        jest.spyOn(deleteUserUseCase, "execute").mockReturnValueOnce(null)
+        import.meta.jest
+            .spyOn(deleteUserUseCase, "execute")
+            .mockReturnValueOnce(null)
         //act
         const result = await sut.execute(httpRequest)
         //assert
@@ -89,7 +93,7 @@ describe("DeleteUserController", () => {
         //arrange
         const { deleteUserUseCase, sut } = makeSut()
 
-        const executeSpy = jest.spyOn(deleteUserUseCase, "execute")
+        const executeSpy = import.meta.jest.spyOn(deleteUserUseCase, "execute")
         //act
         await sut.execute(httpRequest)
         //assert

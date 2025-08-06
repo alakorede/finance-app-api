@@ -1,5 +1,5 @@
 import request from "supertest"
-import { app } from "../../src/app.cjs"
+import { app } from "../../src/app.js"
 import { faker } from "@faker-js/faker"
 
 describe("UserRoutes E2E Tests", () => {

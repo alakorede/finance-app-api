@@ -53,7 +53,7 @@ describe("PostgresUpdateTransactionRepository", () => {
     })
 
     test("Should call prisma with correct params", async () => {
-        const prismaSpy = jest.spyOn(prisma.transaction, "update")
+        const prismaSpy = import.meta.jest.spyOn(prisma.transaction, "update")
 
         const sut = new PostgresUpdateTransactionRepository()
 
@@ -70,9 +70,9 @@ describe("PostgresUpdateTransactionRepository", () => {
     test("Should return null if Prisma throws", async () => {
         const sut = new PostgresUpdateTransactionRepository()
 
-        jest.spyOn(prisma.transaction, "update").mockRejectedValueOnce(
-            new Error(),
-        )
+        import.meta.jest
+            .spyOn(prisma.transaction, "update")
+            .mockRejectedValueOnce(new Error())
 
         const promise = sut.execute(
             transaction.id,

@@ -158,7 +158,7 @@ describe("Create User Controller", () => {
         //arrange
         const { createUserUseCase, sut } = makeSut()
 
-        const executeSpy = jest.spyOn(createUserUseCase, "execute")
+        const executeSpy = import.meta.jest.spyOn(createUserUseCase, "execute")
 
         //act
         await sut.execute(httpRequest)
@@ -172,9 +172,11 @@ describe("Create User Controller", () => {
         const { createUserUseCase, sut } = makeSut()
 
         //act
-        jest.spyOn(createUserUseCase, "execute").mockImplementationOnce(() => {
-            throw new Error()
-        })
+        import.meta.jest
+            .spyOn(createUserUseCase, "execute")
+            .mockImplementationOnce(() => {
+                throw new Error()
+            })
 
         const result = await sut.execute(httpRequest)
 
@@ -185,9 +187,11 @@ describe("Create User Controller", () => {
     it("Should return statusCode 400 if CreateUserUseCase throws EmailIsAlreadyInUseError  ", async () => {
         //arrange
         const { createUserUseCase, sut } = makeSut()
-        jest.spyOn(createUserUseCase, "execute").mockImplementationOnce(() => {
-            throw new EmailAlreadyInUseError(httpRequest.body.email)
-        })
+        import.meta.jest
+            .spyOn(createUserUseCase, "execute")
+            .mockImplementationOnce(() => {
+                throw new EmailAlreadyInUseError(httpRequest.body.email)
+            })
 
         //act
         const result = await sut.execute(httpRequest)

@@ -62,7 +62,7 @@ describe("CreateTransactionUseCase", () => {
     test("Should call GetUserByIdRepository with correct params", async () => {
         //arrange
         const { sut, getUserByIdRepository } = makeSut()
-        const getUserByIdRepositorySpy = jest.spyOn(
+        const getUserByIdRepositorySpy = import.meta.jest.spyOn(
             getUserByIdRepository,
             "execute",
         )
@@ -77,7 +77,10 @@ describe("CreateTransactionUseCase", () => {
     test("Should call IdGeneratorAdapter", async () => {
         //arrange
         const { sut, idGeneratorAdapter } = makeSut()
-        const idGeneratorAdapterSpy = jest.spyOn(idGeneratorAdapter, "execute")
+        const idGeneratorAdapterSpy = import.meta.jest.spyOn(
+            idGeneratorAdapter,
+            "execute",
+        )
         //act
         await sut.execute(transaction)
         //assert
@@ -87,7 +90,9 @@ describe("CreateTransactionUseCase", () => {
     test("Should throw UserNotFoundError when GetUserByIdRepository returns empty for user search", async () => {
         //arrange
         const { sut, getUserByIdRepository } = makeSut()
-        jest.spyOn(getUserByIdRepository, "execute").mockResolvedValue(null)
+        import.meta.jest
+            .spyOn(getUserByIdRepository, "execute")
+            .mockResolvedValue(null)
         //act
         const promise = sut.execute(transaction)
         //assert
@@ -97,9 +102,9 @@ describe("CreateTransactionUseCase", () => {
     test("Should throw if GetUserByIdRepository throws", async () => {
         //arrange
         const { getUserByIdRepository, sut } = makeSut()
-        jest.spyOn(getUserByIdRepository, "execute").mockRejectedValueOnce(
-            new Error(),
-        )
+        import.meta.jest
+            .spyOn(getUserByIdRepository, "execute")
+            .mockRejectedValueOnce(new Error())
         //act
         const promise = sut.execute(transaction)
 
@@ -110,9 +115,11 @@ describe("CreateTransactionUseCase", () => {
     test("Should throw if IdGeneratorAdapter throws", async () => {
         //arrange
         const { idGeneratorAdapter, sut } = makeSut()
-        jest.spyOn(idGeneratorAdapter, "execute").mockImplementationOnce(() => {
-            throw new Error()
-        })
+        import.meta.jest
+            .spyOn(idGeneratorAdapter, "execute")
+            .mockImplementationOnce(() => {
+                throw new Error()
+            })
         //act
         const promise = sut.execute(transaction)
 
@@ -123,10 +130,9 @@ describe("CreateTransactionUseCase", () => {
     test("Should throw if GetUserByIdRepository throws", async () => {
         //arrange
         const { createTransactionRepository, sut } = makeSut()
-        jest.spyOn(
-            createTransactionRepository,
-            "execute",
-        ).mockRejectedValueOnce(new Error())
+        import.meta.jest
+            .spyOn(createTransactionRepository, "execute")
+            .mockRejectedValueOnce(new Error())
         //act
         const promise = sut.execute(transaction)
 

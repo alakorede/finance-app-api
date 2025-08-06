@@ -197,9 +197,9 @@ describe("UpdateTransactionController", () => {
     test("Should return statusCode 404 and Transaction not found error", async () => {
         //arrange
         const { updateTransactionUseCase, sut } = makeSut()
-        jest.spyOn(updateTransactionUseCase, "execute").mockReturnValueOnce(
-            null,
-        )
+        import.meta.jest
+            .spyOn(updateTransactionUseCase, "execute")
+            .mockReturnValueOnce(null)
         //act
         const result = await sut.execute(httpRequest)
         //assert
@@ -211,7 +211,10 @@ describe("UpdateTransactionController", () => {
         //arrange
         const { updateTransactionUseCase, sut } = makeSut()
 
-        const executeSpy = jest.spyOn(updateTransactionUseCase, "execute")
+        const executeSpy = import.meta.jest.spyOn(
+            updateTransactionUseCase,
+            "execute",
+        )
         //act
         await sut.execute(httpRequest)
         //assert
@@ -224,11 +227,11 @@ describe("UpdateTransactionController", () => {
     test("Should return error 500 and Internal Error message on Error", async () => {
         //arrange
         const { updateTransactionUseCase, sut } = makeSut()
-        jest.spyOn(updateTransactionUseCase, "execute").mockImplementationOnce(
-            async () => {
+        import.meta.jest
+            .spyOn(updateTransactionUseCase, "execute")
+            .mockImplementationOnce(async () => {
                 throw new Error()
-            },
-        )
+            })
         //act
         const result = await sut.execute(httpRequest)
         //assert

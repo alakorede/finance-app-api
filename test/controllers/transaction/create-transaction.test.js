@@ -221,11 +221,11 @@ describe("CreateTransacionController", () => {
         //arrange
         const { createTransactionUseCase, sut } = makeSut()
 
-        jest.spyOn(createTransactionUseCase, "execute").mockImplementationOnce(
-            () => {
+        import.meta.jest
+            .spyOn(createTransactionUseCase, "execute")
+            .mockImplementationOnce(() => {
                 throw new Error()
-            },
-        )
+            })
         //act
         const result = await sut.execute(httpRequest)
         //assert
@@ -237,7 +237,10 @@ describe("CreateTransacionController", () => {
         //arrange
         const { createTransactionUseCase, sut } = makeSut()
 
-        const executeSpy = jest.spyOn(createTransactionUseCase, "execute")
+        const executeSpy = import.meta.jest.spyOn(
+            createTransactionUseCase,
+            "execute",
+        )
         //act
         await sut.execute(httpRequest)
         //assert

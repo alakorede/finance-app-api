@@ -76,12 +76,11 @@ describe("GetTransactionsByUserIdController", () => {
         //arrange
         const { getTransactionsByUserIdUseCase, sut } = makeSut()
 
-        jest.spyOn(
-            getTransactionsByUserIdUseCase,
-            "execute",
-        ).mockImplementationOnce(() => {
-            throw new UserNotFoundError()
-        })
+        import.meta.jest
+            .spyOn(getTransactionsByUserIdUseCase, "execute")
+            .mockImplementationOnce(() => {
+                throw new UserNotFoundError()
+            })
         //act
         const result = await sut.execute(httpRequest)
         //assert
@@ -93,12 +92,11 @@ describe("GetTransactionsByUserIdController", () => {
         //arrange
         const { getTransactionsByUserIdUseCase, sut } = makeSut()
 
-        jest.spyOn(
-            getTransactionsByUserIdUseCase,
-            "execute",
-        ).mockImplementationOnce(() => {
-            throw new Error()
-        })
+        import.meta.jest
+            .spyOn(getTransactionsByUserIdUseCase, "execute")
+            .mockImplementationOnce(() => {
+                throw new Error()
+            })
         //act
         const result = await sut.execute(httpRequest)
         //assert
@@ -110,7 +108,10 @@ describe("GetTransactionsByUserIdController", () => {
         //arrange
         const { getTransactionsByUserIdUseCase, sut } = makeSut()
 
-        const executeSpy = jest.spyOn(getTransactionsByUserIdUseCase, "execute")
+        const executeSpy = import.meta.jest.spyOn(
+            getTransactionsByUserIdUseCase,
+            "execute",
+        )
         //act
         await sut.execute(httpRequest)
         //assert

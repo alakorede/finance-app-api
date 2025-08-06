@@ -151,7 +151,9 @@ describe("UpdateUserController", () => {
         //arrange
         const { updateUserUseCase, sut } = makeSut()
 
-        jest.spyOn(updateUserUseCase, "execute").mockReturnValueOnce(null)
+        import.meta.jest
+            .spyOn(updateUserUseCase, "execute")
+            .mockReturnValueOnce(null)
         //act
         const result = await sut.execute(httpRequest)
         //assert
@@ -164,9 +166,11 @@ describe("UpdateUserController", () => {
         const { updateUserUseCase, sut } = makeSut()
 
         //act
-        jest.spyOn(updateUserUseCase, "execute").mockImplementationOnce(() => {
-            throw new EmailAlreadyInUseError(httpRequest.body.email)
-        })
+        import.meta.jest
+            .spyOn(updateUserUseCase, "execute")
+            .mockImplementationOnce(() => {
+                throw new EmailAlreadyInUseError(httpRequest.body.email)
+            })
 
         const result = await sut.execute(httpRequest)
 
@@ -181,7 +185,7 @@ describe("UpdateUserController", () => {
         //arrange
         const { updateUserUseCase, sut } = makeSut()
 
-        const executeSpy = jest.spyOn(updateUserUseCase, "execute")
+        const executeSpy = import.meta.jest.spyOn(updateUserUseCase, "execute")
         //act
         await sut.execute(httpRequest)
         //assert
@@ -194,11 +198,11 @@ describe("UpdateUserController", () => {
     test("Should return error 500 and Internal Error message on Error", async () => {
         //arrange
         const { updateUserUseCase, sut } = makeSut()
-        jest.spyOn(updateUserUseCase, "execute").mockImplementationOnce(
-            async () => {
+        import.meta.jest
+            .spyOn(updateUserUseCase, "execute")
+            .mockImplementationOnce(async () => {
                 throw new Error()
-            },
-        )
+            })
         //act
         const result = await sut.execute(httpRequest)
         //assert

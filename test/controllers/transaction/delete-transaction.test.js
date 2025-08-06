@@ -47,11 +47,11 @@ describe("DeleteTransactionController", () => {
         //arrange
         const { deleteTransactionUseCase, sut } = makeSut()
 
-        jest.spyOn(deleteTransactionUseCase, "execute").mockImplementationOnce(
-            () => {
+        import.meta.jest
+            .spyOn(deleteTransactionUseCase, "execute")
+            .mockImplementationOnce(() => {
                 return null
-            },
-        )
+            })
 
         //act
         const result = await sut.execute(httpRequest)
@@ -79,7 +79,10 @@ describe("DeleteTransactionController", () => {
         //arrange
         const { deleteTransactionUseCase, sut } = makeSut()
 
-        const executeSpy = jest.spyOn(deleteTransactionUseCase, "execute")
+        const executeSpy = import.meta.jest.spyOn(
+            deleteTransactionUseCase,
+            "execute",
+        )
         //act
         await sut.execute(httpRequest)
         //assert
@@ -91,11 +94,11 @@ describe("DeleteTransactionController", () => {
     test("Should return error 500 and Internal Error message on Error", async () => {
         //arrange
         const { deleteTransactionUseCase, sut } = makeSut()
-        jest.spyOn(deleteTransactionUseCase, "execute").mockImplementationOnce(
-            async () => {
+        import.meta.jest
+            .spyOn(deleteTransactionUseCase, "execute")
+            .mockImplementationOnce(async () => {
                 throw new Error()
-            },
-        )
+            })
         //act
         const result = await sut.execute(httpRequest)
         //assert

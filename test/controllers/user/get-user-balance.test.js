@@ -59,11 +59,11 @@ describe("GetUserBalanceController", () => {
         //arrange
         const { getUserBalanceUseCase, sut } = makeSut()
 
-        jest.spyOn(getUserBalanceUseCase, "execute").mockImplementationOnce(
-            () => {
+        import.meta.jest
+            .spyOn(getUserBalanceUseCase, "execute")
+            .mockImplementationOnce(() => {
                 throw new Error()
-            },
-        )
+            })
         //act
         const result = await sut.execute(httpRequest)
         //assert
@@ -74,7 +74,10 @@ describe("GetUserBalanceController", () => {
         //arrange
         const { getUserBalanceUseCase, sut } = makeSut()
 
-        const executeSpy = jest.spyOn(getUserBalanceUseCase, "execute")
+        const executeSpy = import.meta.jest.spyOn(
+            getUserBalanceUseCase,
+            "execute",
+        )
         //act
         await sut.execute(httpRequest)
         //assert
