@@ -4,5 +4,80 @@
         "title": "Finance App API",
         "description": "API, made to study NodeJS and React development, that allows users to manage their finances",
         "version": "1.0.0"
+    },
+    "paths": {
+        "/api/users": {
+            "post": {
+                "summary": "Create a new User",
+                "tags": ["User"],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "required": "true",
+                        "schema": { "$ref": "#/definitions/CreateUserParams" }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User created successfully"
+                    },
+                    "400": {
+                        "description": "Invalid parameters"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "User": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "String",
+                    "example": "f70361c5-1b2c-4d70-ab01-596ac522c4ef"
+                },
+                "first_name": {
+                    "type": "String",
+                    "example": "John"
+                },
+                "last_name": {
+                    "type": "String",
+                    "example": "Wick"
+                },
+                "email": {
+                    "type": "String",
+                    "example": "john.wick@continental.com"
+                },
+                "password": {
+                    "type": "String",
+                    "example": "IKilledThemAll"
+                }
+            }
+        },
+        "CreateUserParams": {
+            "type": "object",
+            "properties": {
+                "first_name": {
+                    "type": "String",
+                    "example": "John"
+                },
+                "last_name": {
+                    "type": "String",
+                    "example": "Wick"
+                },
+                "email": {
+                    "type": "String",
+                    "example": "john.wick@continental.com"
+                },
+                "password": {
+                    "type": "String",
+                    "example": "IKilledThemAll"
+                }
+            }
+        }
     }
 }
