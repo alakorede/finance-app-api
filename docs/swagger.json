@@ -58,6 +58,33 @@
                         "description": "Internal server error"
                     }
                 }
+            },
+            "delete": {
+                "summary": "Delete user by ID",
+                "tags": ["User"],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "userId",
+                        "required": "true",
+                        "type": "string",
+                        "description": "user's ID to be deleted"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User found and deleted",
+                        "schema": {
+                            "$ref": "#/definitions/User"
+                        }
+                    },
+                    "404": {
+                        "description": "User Not Found"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
             }
         }
     },
