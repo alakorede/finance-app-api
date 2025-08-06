@@ -100,6 +100,45 @@
                         }
                     }
                 }
+            },
+            "patch": {
+                "summary": "Updates user by ID",
+                "tags": ["User"],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "userId",
+                        "required": "true",
+                        "type": "string",
+                        "description": "user's ID to be udated"
+                    },
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "required": "true",
+                        "schema": { "$ref": "#/definitions/CreateUserParams" }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User updated successfully"
+                    },
+                    "400": {
+                        "description": "Invalid parameters"
+                    },
+                    "404": {
+                        "description": "User Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/UserNotFoundResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/InternalServerErrorResponse"
+                        }
+                    }
+                }
             }
         }
     },
