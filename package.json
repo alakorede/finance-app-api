@@ -39,6 +39,7 @@
         "dotenv": "^16.5.0",
         "dotenv-cli": "^10.0.0",
         "express": "^5.1.0",
+        "jsonwebtoken": "^9.0.2",
         "pg": "^8.16.0",
         "prettier": "^3.6.2",
         "swagger-ui-express": "^5.0.1",
