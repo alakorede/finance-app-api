@@ -64,7 +64,7 @@ describe("UserRoutes E2E Tests", () => {
         const newTransaction = await request(app)
             .post("/api/transactions")
             .send({ user_id: createdUser.body.id, ...transaction })
-        console.log(`A transaction criada foi ${newTransaction.body.id}`)
+
         const response = await request(app).delete(
             `/api/transactions/${newTransaction.body.id}`,
         )
@@ -102,7 +102,6 @@ describe("UserRoutes E2E Tests", () => {
         const newTransaction = await request(app)
             .post("/api/transactions")
             .send({ user_id: createdUser.body.id, ...transaction })
-        console.log(`A transaction criada foi ${newTransaction.body.id}`)
 
         const response = await request(app)
             .patch(`/api/transactions/${newTransaction.body.id}`)

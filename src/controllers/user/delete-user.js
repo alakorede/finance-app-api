@@ -28,11 +28,9 @@ export class DeleteUserController {
             return serverReturn(200, deletedUser)
         } catch (e) {
             if (e instanceof UserNotFoundError) {
-                console.log(e)
                 return serverReturn(404, { message: e.message })
             }
 
-            console.log(e)
             return internalServerError()
         }
     }

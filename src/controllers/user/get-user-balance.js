@@ -21,8 +21,8 @@ export class GetUserBalanceController {
                 await this.getUserBalanceUseCase.execute(userId)
 
             return serverReturn(200, userBalanceInfo)
-        } catch (e) {
-            console.log(e)
+        } catch (error) {
+            console.error(error)
             return internalServerError()
         }
     }

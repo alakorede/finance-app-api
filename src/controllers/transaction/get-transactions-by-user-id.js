@@ -27,7 +27,6 @@ export class GetTransactionsByUserIdController {
             if (e instanceof UserNotFoundError) {
                 return serverReturn(404, { message: e.message })
             }
-            console.error(e)
             return internalServerError()
         }
     }

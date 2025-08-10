@@ -25,7 +25,6 @@ export class CreateTransactionController {
                 return serverReturn(404, { message: e.message })
             }
 
-            console.error(e)
             return internalServerError()
         }
     }
