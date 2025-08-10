@@ -35,3 +35,21 @@ export const createUserSchema = z.object({
 })
 
 export const updateUserSchema = createUserSchema.partial().strict()
+
+export const loginSchema = z.object({
+    email: z
+        .string({
+            required_error: "E-mail required",
+        })
+        .email({
+            message: "Provide a valid e-mail",
+        }),
+    password: z
+        .string({
+            required_error: "Password required",
+        })
+        .trim()
+        .min(6, {
+            message: "Password must have at least 6 characters",
+        }),
+})
