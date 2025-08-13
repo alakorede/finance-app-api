@@ -21,29 +21,34 @@ import {
 import { IdGeneratorAdapter } from "../adapters/index.js"
 
 import { Router } from "express"
+import { auth } from "../middlewares/auth.js"
 
 export const transactionsRouter = Router()
 
-transactionsRouter.post("/api/transactions", async (request, response) => {
-    const createTransactionRepository =
-        new PostgresCreateTransactionRepository()
-    const getUserByIdRepository = new PostgresGetUserByIdRepository()
-    const idGeneratorAdapter = new IdGeneratorAdapter()
-    const createTransactionUseCase = new CreateTransactionUseCase(
-        createTransactionRepository,
-        getUserByIdRepository,
-        idGeneratorAdapter,
-    )
-    const createTransactionController = new CreateTransactionController(
-        createTransactionUseCase,
-    )
-    const { statusCode, body } =
-        await createTransactionController.execute(request)
+transactionsRouter.post(
+    "/api/transactions",
+    auth,
+    async (request, response) => {
+        const createTransactionRepository =
+            new PostgresCreateTransactionRepository()
+        const getUserByIdRepository = new PostgresGetUserByIdRepository()
+        const idGeneratorAdapter = new IdGeneratorAdapter()
+        const createTransactionUseCase = new CreateTransactionUseCase(
+            createTransactionRepository,
+            getUserByIdRepository,
+            idGeneratorAdapter,
+        )
+        const createTransactionController = new CreateTransactionController(
+            createTransactionUseCase,
+        )
+        const { statusCode, body } =
+            await createTransactionController.execute(request)
 
-    return response.status(statusCode).json(body)
-})
+        return response.status(statusCode).json(body)
+    },
+)
 
-transactionsRouter.get("/api/transactions", async (request, response) => {
+transactionsRouter.get("/api/transactions", auth, async (request, response) => {
     const getTransactionsByUserIdRepository =
         new PostgresGetTransactionsByUserIdRepository()
     const getUserByIdRepository = new PostgresGetUserByIdRepository()
@@ -62,6 +67,7 @@ transactionsRouter.get("/api/transactions", async (request, response) => {
 
 transactionsRouter.patch(
     "/api/transactions/:transactionId",
+    auth,
     async (request, response) => {
         const updateTransactionRepository =
             new PostgresUpdateTransactionRepository()
@@ -81,6 +87,7 @@ transactionsRouter.patch(
 
 transactionsRouter.delete(
     "/api/transactions/:transactionId",
+    auth,
     async (request, response) => {
         const deleteTransactionRepository =
             new PostgresDeleteTransactionRepository()
