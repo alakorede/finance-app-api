@@ -17,7 +17,7 @@ export class LoginUserUseCase {
             throw new UserNotFoundError()
         }
 
-        const isPasswordValid = this.passwordComparatorAdapter.execute(
+        const isPasswordValid = await this.passwordComparatorAdapter.execute(
             password,
             user.password,
         )
