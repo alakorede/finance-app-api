@@ -1,5 +1,6 @@
 import { updateTransactionSchema } from "../../schemas/index.js"
 import { TransactionNotFoundError } from "../../errors/transaction.js"
+import { ForbiddenError } from "../../errors/user.js"
 import { ZodError } from "zod"
 import {
     isIdValid,
@@ -24,6 +25,7 @@ export class UpdateTransactionController {
 
             const transactionUpdated =
                 await this.updateTransactionUseCase.execute(
+                    httpRequest.userId,
                     transactionId,
                     updateTransactionParams,
                 )
@@ -38,6 +40,10 @@ export class UpdateTransactionController {
 
             if (e instanceof TransactionNotFoundError) {
                 return serverReturn(404, { message: e.message })
+            }
+
+            if (e instanceof ForbiddenError) {
+                return serverReturn(403, { message: e.message })
             }
 
             return internalServerError()

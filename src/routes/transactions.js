@@ -10,6 +10,7 @@ import {
     PostgresUpdateTransactionRepository,
     PostgresDeleteTransactionRepository,
     PostgresGetUserByIdRepository,
+    PostgresGetTransactionByIdRepository,
 } from "../repositories/postgres/index.js"
 import {
     CreateTransactionUseCase,
@@ -41,8 +42,10 @@ transactionsRouter.post(
         const createTransactionController = new CreateTransactionController(
             createTransactionUseCase,
         )
-        const { statusCode, body } =
-            await createTransactionController.execute(request)
+        const { statusCode, body } = await createTransactionController.execute({
+            ...request,
+            body: { ...request.body, user_id: request.userId },
+        })
 
         return response.status(statusCode).json(body)
     },
@@ -60,7 +63,10 @@ transactionsRouter.get("/api/transactions", auth, async (request, response) => {
         new GetTransactionsByUserIdController(getTransactionsByUserIdUseCase)
 
     const { statusCode, body } =
-        await getTransactionsByUserIdController.execute(request)
+        await getTransactionsByUserIdController.execute({
+            ...request,
+            query: { userId: request.userId },
+        })
 
     return response.status(statusCode).json(body)
 })
@@ -69,10 +75,13 @@ transactionsRouter.patch(
     "/api/transactions/:transactionId",
     auth,
     async (request, response) => {
+        const getTransactionByIdRepository =
+            new PostgresGetTransactionByIdRepository()
         const updateTransactionRepository =
             new PostgresUpdateTransactionRepository()
         const updateTransactionUseCase = new UpdateTransactionUseCase(
             updateTransactionRepository,
+            getTransactionByIdRepository,
         )
         const updateTransactionController = new UpdateTransactionController(
             updateTransactionUseCase,
