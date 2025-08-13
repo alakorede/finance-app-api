@@ -20,12 +20,12 @@ describe("UserRoutes E2E Tests", () => {
         expect(response.body.email).toBe(userData.email)
     })
 
-    test("GET /api/users:userId should return 200 and user dara on body when user is found", async () => {
+    test("GET /api/usersshould return 200 and user dara on body when user is found", async () => {
         const { body: createdUser } = await request(app)
             .post("/api/users")
             .send(userData)
         const response = await request(app)
-            .get(`/api/users/${createdUser.id}`)
+            .get(`/api/users`)
             .set("Authorization", `Bearer ${createdUser.tokens.accessToken}`)
 
         expect(response.status).toBe(200)
@@ -36,7 +36,7 @@ describe("UserRoutes E2E Tests", () => {
         expect(response.body.email).toBe(createdUser.email)
     })
 
-    test("PATCH /api/users/:userId should return 200 and userData up to date when user is updated", async () => {
+    test("PATCH /api/users should return 200 and userData up to date when user is updated", async () => {
         const { body: createdUser } = await request(app)
             .post("/api/users")
             .send(userData)
@@ -47,7 +47,7 @@ describe("UserRoutes E2E Tests", () => {
             password: faker.internet.password({ length: 7 }),
         }
         const response = await request(app)
-            .patch(`/api/users/${createdUser.id}`)
+            .patch(`/api/users`)
             .send(updateUser)
             .set("Authorization", `Bearer ${createdUser.tokens.accessToken}`)
 
@@ -59,12 +59,12 @@ describe("UserRoutes E2E Tests", () => {
         expect(response.body.email).toBe(updateUser.email)
     })
 
-    test("DELETE /api/users/:userId should return 200 and userData when user is deleted", async () => {
+    test("DELETE /api/users should return 200 and userData when user is deleted", async () => {
         const { body: createdUser } = await request(app)
             .post("/api/users")
             .send(userData)
         const response = await request(app)
-            .delete(`/api/users/${createdUser.id}`)
+            .delete(`/api/users`)
             .set("Authorization", `Bearer ${createdUser.tokens.accessToken}`)
 
         expect(response.status).toBe(200)
