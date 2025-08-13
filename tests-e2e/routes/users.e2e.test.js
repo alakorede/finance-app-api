@@ -24,7 +24,9 @@ describe("UserRoutes E2E Tests", () => {
         const { body: createdUser } = await request(app)
             .post("/api/users")
             .send(userData)
-        const response = await request(app).get(`/api/users/${createdUser.id}`)
+        const response = await request(app)
+            .get(`/api/users/${createdUser.id}`)
+            .set("Authorization", `Bearer ${createdUser.tokens.accessToken}`)
 
         expect(response.status).toBe(200)
         expect(response.body.id).toBe(createdUser.id)
@@ -32,15 +34,6 @@ describe("UserRoutes E2E Tests", () => {
         expect(response.body.first_name).toBe(createdUser.first_name)
         expect(response.body.last_name).toBe(createdUser.last_name)
         expect(response.body.email).toBe(createdUser.email)
-    })
-
-    test("GET /api/users:userId should return 404 on user not found", async () => {
-        const response = await request(app).get(
-            `/api/users/${faker.string.uuid()}`,
-        )
-
-        expect(response.status).toBe(404)
-        expect(response.body.message).toBe("User Not Found")
     })
 
     test("PATCH /api/users/:userId should return 200 and userData up to date when user is updated", async () => {
@@ -56,6 +49,7 @@ describe("UserRoutes E2E Tests", () => {
         const response = await request(app)
             .patch(`/api/users/${createdUser.id}`)
             .send(updateUser)
+            .set("Authorization", `Bearer ${createdUser.tokens.accessToken}`)
 
         expect(response.status).toBe(200)
         expect(response.body.id).toBe(createdUser.id)
@@ -65,28 +59,13 @@ describe("UserRoutes E2E Tests", () => {
         expect(response.body.email).toBe(updateUser.email)
     })
 
-    test("PATCH /api/users/:userId should return 404 on user not found", async () => {
-        const updateUser = {
-            first_name: faker.person.firstName(),
-            last_name: faker.person.lastName(),
-            email: faker.internet.email(),
-            password: faker.internet.password({ length: 7 }),
-        }
-        const response = await request(app)
-            .patch(`/api/users/${faker.string.uuid()}`)
-            .send(updateUser)
-
-        expect(response.status).toBe(404)
-        expect(response.body.message).toBe("User Not Found")
-    })
-
     test("DELETE /api/users/:userId should return 200 and userData when user is deleted", async () => {
         const { body: createdUser } = await request(app)
             .post("/api/users")
             .send(userData)
-        const response = await request(app).delete(
-            `/api/users/${createdUser.id}`,
-        )
+        const response = await request(app)
+            .delete(`/api/users/${createdUser.id}`)
+            .set("Authorization", `Bearer ${createdUser.tokens.accessToken}`)
 
         expect(response.status).toBe(200)
         expect(response.body.id).toBe(createdUser.id)
@@ -94,15 +73,6 @@ describe("UserRoutes E2E Tests", () => {
         expect(response.body.first_name).toBe(createdUser.first_name)
         expect(response.body.last_name).toBe(createdUser.last_name)
         expect(response.body.email).toBe(createdUser.email)
-    })
-
-    test("DELETE /api/users/:userId should return 404 on user not found", async () => {
-        const response = await request(app).delete(
-            `/api/users/${faker.string.uuid()}`,
-        )
-
-        expect(response.status).toBe(404)
-        expect(response.body.message).toBe("User Not Found")
     })
 
     test("POST /api/users/login should return 200 and tokens on user login successfully", async () => {

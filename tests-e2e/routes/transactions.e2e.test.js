@@ -21,9 +21,15 @@ describe("UserRoutes E2E Tests", () => {
 
     test("POST /api/transaction should return 200 and new transaction data on body when transaction is created", async () => {
         const createdUser = await request(app).post("/api/users").send(userData)
+
         const response = await request(app)
             .post("/api/transactions")
             .send({ user_id: createdUser.body.id, ...transaction })
+            .set(
+                "Authorization",
+                `Bearer ${createdUser.body.tokens.accessToken}`,
+            )
+
         expect(response.status).toBe(200)
         expect(response.body.id).toBeTruthy()
         expect(response.body.user_id).toEqual(createdUser.body.id)
@@ -34,13 +40,21 @@ describe("UserRoutes E2E Tests", () => {
 
     test("GET /api/transaction should return 200 and the transaction data on body", async () => {
         const createdUser = await request(app).post("/api/users").send(userData)
+
         const newTransaction = await request(app)
             .post("/api/transactions")
             .send({ user_id: createdUser.body.id, ...transaction })
+            .set(
+                "Authorization",
+                `Bearer ${createdUser.body.tokens.accessToken}`,
+            )
 
-        const response = await request(app).get(
-            `/api/transactions?userId=${createdUser.body.id}`,
-        )
+        const response = await request(app)
+            .get(`/api/transactions?userId=${createdUser.body.id}`)
+            .set(
+                "Authorization",
+                `Bearer ${createdUser.body.tokens.accessToken}`,
+            )
 
         expect(response.status).toBe(200)
         expect(response.body[0].id).toBe(newTransaction.body.id)
@@ -61,13 +75,21 @@ describe("UserRoutes E2E Tests", () => {
 
     test("DELETE /api/transaction should return 200 and transaction on body when a transaction is deleted", async () => {
         const createdUser = await request(app).post("/api/users").send(userData)
+
         const newTransaction = await request(app)
             .post("/api/transactions")
             .send({ user_id: createdUser.body.id, ...transaction })
+            .set(
+                "Authorization",
+                `Bearer ${createdUser.body.tokens.accessToken}`,
+            )
 
-        const response = await request(app).delete(
-            `/api/transactions/${newTransaction.body.id}`,
-        )
+        const response = await request(app)
+            .delete(`/api/transactions/${newTransaction.body.id}`)
+            .set(
+                "Authorization",
+                `Bearer ${createdUser.body.tokens.accessToken}`,
+            )
 
         expect(response.status).toBe(200)
         expect(response.body.id).toBe(newTransaction.body.id)
@@ -99,13 +121,22 @@ describe("UserRoutes E2E Tests", () => {
         }
 
         const createdUser = await request(app).post("/api/users").send(userData)
+
         const newTransaction = await request(app)
             .post("/api/transactions")
             .send({ user_id: createdUser.body.id, ...transaction })
+            .set(
+                "Authorization",
+                `Bearer ${createdUser.body.tokens.accessToken}`,
+            )
 
         const response = await request(app)
             .patch(`/api/transactions/${newTransaction.body.id}`)
             .send(updateTransactionData)
+            .set(
+                "Authorization",
+                `Bearer ${createdUser.body.tokens.accessToken}`,
+            )
 
         expect(response.status).toBe(200)
         expect(response.body.id).toBe(newTransaction.body.id)
