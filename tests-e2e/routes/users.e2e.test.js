@@ -116,9 +116,29 @@ describe("UserRoutes E2E Tests", () => {
         })
 
         expect(response.status).toBe(200)
+        expect(response.body.tokens.accessToken).toBeDefined()
+        expect(response.body.tokens.refreshToken).toBeDefined()
     })
 
-    // test("POST /api/users/login should return 401 on password fail", async () => {})
+    test("POST /api/users/login should return 401 on password fail", async () => {
+        const { body: createdUser } = await request(app)
+            .post("/api/users")
+            .send(userData)
 
-    // test("POST /api/users/login should return 404 on user not found", async () => {})
+        const response = await request(app).post("/api/users/login").send({
+            email: createdUser.email,
+            password: "invalid_password",
+        })
+
+        expect(response.status).toBe(401)
+    })
+
+    test("POST /api/users/login should return 404 on user not found", async () => {
+        const response = await request(app).post("/api/users/login").send({
+            email: "anyemail@mail.com",
+            password: "invalid_password",
+        })
+
+        expect(response.status).toBe(404)
+    })
 })
