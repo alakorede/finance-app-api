@@ -4,6 +4,7 @@ import {
     UpdateUserController,
     DeleteUserController,
     GetUserBalanceController,
+    LoginUserController,
 } from "../controllers/index.js"
 
 import {
@@ -12,6 +13,7 @@ import {
     UpdateUserUseCase,
     DeleteUserUseCase,
     GetUserBalanceUseCase,
+    LoginUserUseCase,
 } from "../use-cases/index.js"
 
 import {
@@ -23,7 +25,12 @@ import {
     PostgresGetUserBalanceRepository,
 } from "../repositories/postgres/index.js"
 
-import { PasswordHasherAdapter, IdGeneratorAdapter } from "../adapters/index.js"
+import {
+    PasswordHasherAdapter,
+    IdGeneratorAdapter,
+    PasswordComparatorAdapter,
+    TokensGeneratorAdapter,
+} from "../adapters/index.js"
 
 import { Router } from "express"
 
@@ -94,6 +101,22 @@ usersRouter.get("/api/users/:userId/balance", async (request, response) => {
     )
 
     const { statusCode, body } = await getUserBalanceController.execute(request)
+
+    return response.status(statusCode).json(body)
+})
+
+usersRouter.post("/api/users/login", async (request, response) => {
+    const getUserByEmailRepository = new PostgresGetUserByEmailRepository()
+    const passwordComparatorAdapter = new PasswordComparatorAdapter()
+    const tokensGeneratorAdapter = new TokensGeneratorAdapter()
+    const loginUserUseCase = new LoginUserUseCase(
+        getUserByEmailRepository,
+        passwordComparatorAdapter,
+        tokensGeneratorAdapter,
+    )
+    const loginUserController = new LoginUserController(loginUserUseCase)
+
+    const { statusCode, body } = await loginUserController.execute(request)
 
     return response.status(statusCode).json(body)
 })
