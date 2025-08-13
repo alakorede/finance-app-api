@@ -10,17 +10,32 @@ describe("UpdateTransactionUseCase", () => {
         type: faker.helpers.arrayElement(["EXPENSE", "INVESTMENT", "EARNING"]),
     }
 
+    const userId = faker.string.uuid()
+
     class UpdateTransactionRepositoryStub {
         async execute() {
             return transaction
         }
     }
 
+    class GetTransactionByIdRepositoryStub {
+        async execute() {
+            return {
+                user_id: userId,
+            }
+        }
+    }
+
     const makeSut = () => {
+        const getTransactionByIdRepository =
+            new GetTransactionByIdRepositoryStub()
         const updateTransactionRepository =
             new UpdateTransactionRepositoryStub()
 
-        const sut = new UpdateTransactionUseCase(updateTransactionRepository)
+        const sut = new UpdateTransactionUseCase(
+            updateTransactionRepository,
+            getTransactionByIdRepository,
+        )
 
         return { updateTransactionRepository, sut }
     }
@@ -29,7 +44,11 @@ describe("UpdateTransactionUseCase", () => {
         //arrange
         const { sut } = makeSut()
         //act
-        const result = await sut.execute(faker.string.uuid(), transaction)
+        const result = await sut.execute(
+            userId,
+            faker.string.uuid(),
+            transaction,
+        )
         //assert
         expect(result).toEqual(transaction)
     })
@@ -43,7 +62,7 @@ describe("UpdateTransactionUseCase", () => {
         )
         const transactionId = faker.string.uuid()
         //act
-        await sut.execute(transactionId, transaction)
+        await sut.execute(userId, transactionId, transaction)
         //assert
         expect(updateTransactionRepositorySpy).toHaveBeenCalledWith(
             transactionId,
@@ -58,7 +77,7 @@ describe("UpdateTransactionUseCase", () => {
             .spyOn(updateTransactionRepository, "execute")
             .mockRejectedValueOnce(new Error())
         //act
-        const promise = sut.execute(faker.string.uuid(), transaction)
+        const promise = sut.execute(userId, faker.string.uuid(), transaction)
         //assert
         await expect(promise).rejects.toThrow()
     })

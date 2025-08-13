@@ -18,10 +18,23 @@ describe("UpdateTransactionController", () => {
             }
         }
     }
+    const userId = faker.string.uuid()
+    class GetTransactionByIdRepositoryStub {
+        async execute() {
+            return {
+                user_id: userId,
+            }
+        }
+    }
 
     const makeSut = () => {
+        const getTransactionByIdRepository =
+            new GetTransactionByIdRepositoryStub()
         const updateTransactionUseCase = new UpdateTransactionUseCaseStub()
-        const sut = new UpdateTransactionController(updateTransactionUseCase)
+        const sut = new UpdateTransactionController(
+            updateTransactionUseCase,
+            getTransactionByIdRepository,
+        )
 
         return { updateTransactionUseCase, sut }
     }
@@ -46,7 +59,7 @@ describe("UpdateTransactionController", () => {
         //arrange
         const { sut } = makeSut()
         //act
-        const result = await sut.execute(httpRequest)
+        const result = await sut.execute({ ...httpRequest, userId: userId })
         //assert
         expect(result.statusCode).toBe(200)
         expect(result.body).not.toBe(undefined)
@@ -57,6 +70,7 @@ describe("UpdateTransactionController", () => {
         const { sut } = makeSut()
         //act
         const result = await sut.execute({
+            userId: userId,
             params: { transactionId: undefined },
             body: httpRequest.body,
         })
@@ -72,6 +86,7 @@ describe("UpdateTransactionController", () => {
         const { sut } = makeSut()
         //act
         const result = await sut.execute({
+            userId: userId,
             params: { transactionId: "invalid_ID" },
             body: httpRequest.body,
         })
@@ -87,6 +102,7 @@ describe("UpdateTransactionController", () => {
         const { sut } = makeSut()
         //act
         const result = await sut.execute({
+            userId: userId,
             params: httpRequest.params,
             body: { name: "" },
         })
@@ -100,6 +116,7 @@ describe("UpdateTransactionController", () => {
         const { sut } = makeSut()
         //act
         const result = await sut.execute({
+            userId: userId,
             params: httpRequest.params,
             body: { name: null },
         })
@@ -113,6 +130,7 @@ describe("UpdateTransactionController", () => {
         const { sut } = makeSut()
         //act
         const result = await sut.execute({
+            userId: userId,
             params: httpRequest.params,
             body: { date: "invalid_date" },
         })
@@ -128,6 +146,7 @@ describe("UpdateTransactionController", () => {
         const { sut } = makeSut()
         //act
         const result = await sut.execute({
+            userId: userId,
             params: httpRequest.params,
             body: { date: "" },
         })
@@ -143,6 +162,7 @@ describe("UpdateTransactionController", () => {
         const { sut } = makeSut()
         //act
         const result = await sut.execute({
+            userId: userId,
             params: httpRequest.params,
             body: { amount: "" },
         })
@@ -156,6 +176,7 @@ describe("UpdateTransactionController", () => {
         const { sut } = makeSut()
         //act
         const result = await sut.execute({
+            userId: userId,
             params: httpRequest.params,
             body: { amount: -1 },
         })
@@ -169,6 +190,7 @@ describe("UpdateTransactionController", () => {
         const { sut } = makeSut()
         //act
         const result = await sut.execute({
+            userId: userId,
             params: httpRequest.params,
             body: { type: "" },
         })
@@ -184,6 +206,7 @@ describe("UpdateTransactionController", () => {
         const { sut } = makeSut()
         //act
         const result = await sut.execute({
+            userId: userId,
             params: httpRequest.params,
             body: { type: "invalid_Type" },
         })
@@ -201,7 +224,7 @@ describe("UpdateTransactionController", () => {
             .spyOn(updateTransactionUseCase, "execute")
             .mockReturnValueOnce(null)
         //act
-        const result = await sut.execute(httpRequest)
+        const result = await sut.execute({ ...httpRequest, userId: userId })
         //assert
         expect(result.statusCode).toBe(404)
         expect(result.body.message).toBe("Transaction Not Found")
@@ -216,9 +239,10 @@ describe("UpdateTransactionController", () => {
             "execute",
         )
         //act
-        await sut.execute(httpRequest)
+        await sut.execute({ ...httpRequest, userId: userId })
         //assert
         expect(executeSpy).toHaveBeenCalledWith(
+            userId,
             httpRequest.params.transactionId,
             httpRequest.body,
         )
@@ -233,7 +257,7 @@ describe("UpdateTransactionController", () => {
                 throw new Error()
             })
         //act
-        const result = await sut.execute(httpRequest)
+        const result = await sut.execute({ ...httpRequest, userId: userId })
         //assert
         expect(result.statusCode).toBe(500)
         expect(result.body.message).toBe("Internal Server Error")

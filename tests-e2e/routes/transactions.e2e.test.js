@@ -12,7 +12,6 @@ describe("UserRoutes E2E Tests", () => {
     }
 
     const transaction = {
-        //user_id: user.id,
         name: faker.finance.accountName(),
         date: faker.date.anytime().toISOString(),
         amount: Number(faker.finance.amount(10, 1000)),
