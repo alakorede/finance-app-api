@@ -42,11 +42,13 @@ usersRouter.post("/api/users", async (request, response) => {
     const createUserRepository = new PostgresCreateUserRepository()
     const passwordHasherAdapter = new PasswordHasherAdapter()
     const idGeneratorAdapter = new IdGeneratorAdapter()
+    const tokensGeneratorAdapter = new TokensGeneratorAdapter()
     const createUserUseCase = new CreateUserUseCase(
         getUserByEmailRepository,
         createUserRepository,
         passwordHasherAdapter,
         idGeneratorAdapter,
+        tokensGeneratorAdapter,
     )
     const createUserController = new CreateUserController(createUserUseCase)
     const { statusCode, body } = await createUserController.execute(request)
