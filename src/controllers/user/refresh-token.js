@@ -5,6 +5,8 @@ import {
     internalServerError,
 } from "../helpers/index.js"
 
+import jwt from "jsonwebtoken"
+
 import { refreshTokenSchema } from "../../schemas/index.js"
 import { UnauthorizedError } from "../../errors/user.js"
 
@@ -33,8 +35,11 @@ export class RefreshTokenController {
                 return serverReturn(400, { message: e.errors[0].message })
             }
 
-            if (e instanceof UnauthorizedError) {
-                unauthorizedResponse()
+            if (
+                e instanceof UnauthorizedError ||
+                e instanceof jwt.JsonWebTokenError
+            ) {
+                return unauthorizedResponse()
             }
 
             console.error(e)

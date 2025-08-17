@@ -5,6 +5,7 @@ import {
     DeleteUserController,
     GetUserBalanceController,
     LoginUserController,
+    RefreshTokenController,
 } from "../controllers/index.js"
 
 import {
@@ -14,6 +15,7 @@ import {
     DeleteUserUseCase,
     GetUserBalanceUseCase,
     LoginUserUseCase,
+    RefreshTokenUseCase,
 } from "../use-cases/index.js"
 
 import {
@@ -30,6 +32,7 @@ import {
     IdGeneratorAdapter,
     PasswordComparatorAdapter,
     TokensGeneratorAdapter,
+    TokenVerifierAdapter,
 } from "../adapters/index.js"
 
 import { Router } from "express"
@@ -132,6 +135,22 @@ usersRouter.post("/api/users/login", async (request, response) => {
     const loginUserController = new LoginUserController(loginUserUseCase)
 
     const { statusCode, body } = await loginUserController.execute(request)
+
+    return response.status(statusCode).json(body)
+})
+
+usersRouter.post("/api/users/refresh-token", async (request, response) => {
+    const tokensGeneratorAdapter = new TokensGeneratorAdapter()
+    const tokenVerifierAdapter = new TokenVerifierAdapter()
+    const refreshTokenUseCase = new RefreshTokenUseCase(
+        tokensGeneratorAdapter,
+        tokenVerifierAdapter,
+    )
+    const refreshTokenController = new RefreshTokenController(
+        refreshTokenUseCase,
+    )
+
+    const { statusCode, body } = await refreshTokenController.execute(request)
 
     return response.status(statusCode).json(body)
 })
