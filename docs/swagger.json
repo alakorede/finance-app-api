@@ -5,6 +5,19 @@
         "description": "API, made to study NodeJS and React development, that allows users to manage their finances",
         "version": "1.0.0"
     },
+    "securityDefinitions": {
+        "BearerAuth": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header",
+            "description": "Enter 'Bearer' followed by your token. Example: 'Bearer eyJhbGciOiJT..."
+        }
+    },
+    "security": [
+        {
+            "BearerAuth": []
+        }
+    ],
     "paths": {
         "/api/users": {
             "post": {
@@ -20,7 +33,10 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "User created successfully"
+                        "description": "User created successfully",
+                        "schema": {
+                            "$ref": "#/definitions/UserWithToken"
+                        }
                     },
                     "400": {
                         "description": "Invalid parameters"
@@ -32,21 +48,10 @@
                         }
                     }
                 }
-            }
-        },
-        "/api/users/{userId}": {
+            },
             "get": {
                 "tags": ["User"],
-                "summary": "Get user by ID",
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "userId",
-                        "required": true,
-                        "type": "string",
-                        "description": "user's ID to get"
-                    }
-                ],
+                "summary": "Get user",
                 "responses": {
                     "200": {
                         "description": "User found",
@@ -54,6 +59,12 @@
                             "$ref": "#/definitions/User"
                         }
                     },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/UnauthorizedResponse"
+                        }
+                    },
                     "404": {
                         "description": "User Not Found",
                         "schema": {
@@ -66,20 +77,16 @@
                             "$ref": "#/definitions/InternalServerErrorResponse"
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ]
             },
             "delete": {
-                "summary": "Delete user by ID",
+                "summary": "Delete user",
                 "tags": ["User"],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "userId",
-                        "required": true,
-                        "type": "string",
-                        "description": "user's ID to be deleted"
-                    }
-                ],
                 "responses": {
                     "200": {
                         "description": "User found and deleted",
@@ -87,6 +94,12 @@
                             "$ref": "#/definitions/User"
                         }
                     },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/UnauthorizedResponse"
+                        }
+                    },
                     "404": {
                         "description": "User Not Found",
                         "schema": {
@@ -99,19 +112,17 @@
                             "$ref": "#/definitions/InternalServerErrorResponse"
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ]
             },
             "patch": {
-                "summary": "Updates user by ID",
+                "summary": "Updates user",
                 "tags": ["User"],
                 "parameters": [
-                    {
-                        "in": "path",
-                        "name": "userId",
-                        "required": true,
-                        "type": "string",
-                        "description": "user's ID to be udated"
-                    },
                     {
                         "in": "body",
                         "name": "body",
@@ -126,6 +137,12 @@
                     "400": {
                         "description": "Invalid parameters"
                     },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/UnauthorizedResponse"
+                        }
+                    },
                     "404": {
                         "description": "User Not Found",
                         "schema": {
@@ -138,22 +155,92 @@
                             "$ref": "#/definitions/InternalServerErrorResponse"
                         }
                     }
+                },
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/users/login": {
+            "post": {
+                "summary": "Authenticates a user",
+                "tags": ["User"],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "required": true,
+                        "schema": { "$ref": "#/definitions/LoginUserParams" }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User logged in successfully",
+                        "schema": {
+                            "$ref": "#/definitions/UserWithToken"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/UnauthorizedResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid parameters"
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/InternalServerErrorResponse"
+                        }
+                    }
                 }
             }
         },
-        "/api/users/{userId}/balance": {
-            "get": {
+        "/api/users/refresh-token": {
+            "post": {
+                "summary": "Authenticates a user",
                 "tags": ["User"],
-                "summary": "Get user balance by user ID",
                 "parameters": [
                     {
-                        "in": "path",
-                        "name": "userId",
+                        "in": "body",
+                        "name": "body",
                         "required": true,
-                        "type": "string",
-                        "description": "user's ID to get balance"
+                        "schema": { "$ref": "#/definitions/RefreshTokenParams" }
                     }
                 ],
+                "responses": {
+                    "200": {
+                        "description": "Token refreshed successfully",
+                        "schema": {
+                            "$ref": "#/definitions/TokensObject"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/UnauthorizedResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid parameters"
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/InternalServerErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/users/balance": {
+            "get": {
+                "tags": ["User"],
+                "summary": "Get user balance",
                 "responses": {
                     "200": {
                         "description": "User found and has transactions to calculate balance",
@@ -161,6 +248,12 @@
                             "$ref": "#/definitions/UserBalance"
                         }
                     },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/UnauthorizedResponse"
+                        }
+                    },
                     "404": {
                         "description": "User Not Found",
                         "schema": {
@@ -173,22 +266,18 @@
                             "$ref": "#/definitions/InternalServerErrorResponse"
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ]
             }
         },
         "/api/transactions": {
             "get": {
-                "summary": "Get user Transactions by User Id",
+                "summary": "Get user Transactions",
                 "tags": ["Transaction"],
-                "parameters": [
-                    {
-                        "in": "query",
-                        "name": "userId",
-                        "required": true,
-                        "type": "string",
-                        "description": "user's ID to get transactions"
-                    }
-                ],
                 "responses": {
                     "200": {
                         "description": "Transaction created successfully",
@@ -199,6 +288,12 @@
                             }
                         }
                     },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/UnauthorizedResponse"
+                        }
+                    },
                     "404": {
                         "description": "User Not Found",
                         "schema": {
@@ -211,7 +306,12 @@
                             "$ref": "#/definitions/InternalServerErrorResponse"
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ]
             },
             "post": {
                 "summary": "Create a new Transaction",
@@ -236,6 +336,12 @@
                     "400": {
                         "description": "Invalid parameters"
                     },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/UnauthorizedResponse"
+                        }
+                    },
                     "404": {
                         "description": "User Not Found",
                         "schema": {
@@ -248,7 +354,12 @@
                             "$ref": "#/definitions/InternalServerErrorResponse"
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ]
             }
         },
         "/api/transactions/{transactionId}": {
@@ -271,6 +382,12 @@
                             "$ref": "#/definitions/Transaction"
                         }
                     },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/UnauthorizedResponse"
+                        }
+                    },
                     "404": {
                         "description": "Transaction Not Found",
                         "schema": {
@@ -283,7 +400,12 @@
                             "$ref": "#/definitions/InternalServerErrorResponse"
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ]
             },
             "patch": {
                 "summary": "Updates Transaction by ID",
@@ -315,6 +437,12 @@
                     "400": {
                         "description": "Invalid parameters"
                     },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/UnauthorizedResponse"
+                        }
+                    },
                     "404": {
                         "description": "Transaction Not Found",
                         "schema": {
@@ -327,7 +455,12 @@
                             "$ref": "#/definitions/InternalServerErrorResponse"
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ]
             }
         }
     },
@@ -354,6 +487,44 @@
                 "password": {
                     "type": "String",
                     "example": "IKilledThemAll"
+                }
+            }
+        },
+        "UserWithToken": {
+            "allOf": [
+                {
+                    "$ref": "#/definitions/User"
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "tokens": {
+                            "type": "object",
+                            "properties": {
+                                "access_token": {
+                                    "type": "string",
+                                    "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                                },
+                                "refresh_token": {
+                                    "type": "string",
+                                    "example": "eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZS79..."
+                                }
+                            }
+                        }
+                    }
+                }
+            ]
+        },
+        "TokensObject": {
+            "type": "object",
+            "properties": {
+                "access_token": {
+                    "type": "string",
+                    "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                },
+                "refresh_token": {
+                    "type": "string",
+                    "example": "eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZS79..."
                 }
             }
         },
@@ -451,16 +622,37 @@
                 }
             }
         },
+        "LoginUserParams": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string",
+                    "example": "user_email@financeapp.com",
+                    "required": true
+                },
+                "password": {
+                    "type": "string",
+                    "example": "Dkdfnmsdf",
+                    "required": true
+                }
+            }
+        },
+        "RefreshTokenParams": {
+            "type": "object",
+            "properties": {
+                "refreshToken": {
+                    "type": "string",
+                    "example": "iwiYWRtaW4iOnRydWUsImlhdCI6MTUxNjIzOTAyMn...",
+                    "required": true
+                }
+            }
+        },
         "Transaction": {
             "type": "object",
             "properties": {
                 "id": {
                     "type": "string",
                     "example": "3abf50d6-392f-4181-a8a8-ad3aa05971ff"
-                },
-                "user_id": {
-                    "type": "string",
-                    "example": "f70361c5-1b2c-4d70-ab01-596ac522c4ef"
                 },
                 "name": {
                     "type": "String",
@@ -505,6 +697,15 @@
                 "message": {
                     "type": "string",
                     "example": "Transaction Not Found"
+                }
+            }
+        },
+        "UnauthorizedResponse": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string",
+                    "example": "Unauthorized"
                 }
             }
         }
