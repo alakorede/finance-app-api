@@ -46,6 +46,7 @@ export class UpdateTransactionController {
                 return serverReturn(403, { message: e.message })
             }
 
+            console.error("UpdateTransactionController error:", e)
             return internalServerError()
         }
     }

@@ -47,6 +47,7 @@ export class UpdateUserController {
                 return serverReturn(404, { message: e.message })
             }
 
+            console.error("UpdateUserController error:", e)
             return internalServerError()
         }
     }

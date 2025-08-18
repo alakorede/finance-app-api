@@ -30,6 +30,8 @@ export class DeleteTransactionController {
             if (e instanceof TransactionNotFoundError) {
                 return serverReturn(404, { message: e.message })
             }
+
+            console.error("DeleteTransactionController error:", e)
             return internalServerError()
         }
     }

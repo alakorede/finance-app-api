@@ -28,6 +28,8 @@ export class GetUserByIdController {
             if (e instanceof UserNotFoundError) {
                 return serverReturn(404, { message: e.message })
             }
+
+            console.error("GetUserByIdController error:", e)
             return internalServerError()
         }
     }

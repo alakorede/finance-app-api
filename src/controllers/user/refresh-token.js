@@ -42,7 +42,7 @@ export class RefreshTokenController {
                 return unauthorizedResponse()
             }
 
-            console.error(e)
+            console.error("RefreshTokenController error:", e)
             return internalServerError()
         }
     }

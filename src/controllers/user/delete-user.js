@@ -31,6 +31,7 @@ export class DeleteUserController {
                 return serverReturn(404, { message: e.message })
             }
 
+            console.error("DeleteUserController error:", e)
             return internalServerError()
         }
     }

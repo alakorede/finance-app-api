@@ -35,6 +35,7 @@ export class LoginUserController {
                 return serverReturn(404, { message: e.message })
             }
 
+            console.error("LoginUserController error:", e)
             return internalServerError()
         }
     }
