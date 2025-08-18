@@ -29,6 +29,7 @@ export class CreateUserController {
             if (e instanceof EmailAlreadyInUseError) {
                 return emailAlreadyInUseResponse()
             }
+            console.error("CreateUserController error:", e)
             return internalServerError()
         }
     }
