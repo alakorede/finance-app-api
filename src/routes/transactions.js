@@ -65,7 +65,12 @@ transactionsRouter.get("/api/transactions", auth, async (request, response) => {
     const { statusCode, body } =
         await getTransactionsByUserIdController.execute({
             ...request,
-            query: { userId: request.userId },
+            query: {
+                ...request.query,
+                from: request.query.from,
+                to: request.query.to,
+                userId: request.userId,
+            },
         })
 
     return response.status(statusCode).json(body)
