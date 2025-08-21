@@ -11,7 +11,6 @@ describe("UserRoutes E2E Tests", () => {
     }
     test("POST /api/users should return 200 and user data on body when user is created", async () => {
         const response = await request(app).post("/api/users").send(userData)
-        console.log(response)
 
         expect(response.status).toBe(200)
         expect(response.body.id).toBeTruthy()
