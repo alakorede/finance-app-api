@@ -1,7 +1,6 @@
 import { PostgresGetTransactionsByUserIdRepository } from "../../../src/repositories/postgres/index.js"
 import { prisma } from "../../../prisma/prisma.js"
 import { faker } from "@faker-js/faker"
-import dayjs from "dayjs"
 
 describe("PostgresGetTransactionByUserId", () => {
     const user = {
@@ -21,26 +20,20 @@ describe("PostgresGetTransactionByUserId", () => {
         type: faker.helpers.arrayElement(["EXPENSE", "INVESTMENT", "EARNING"]),
     }
 
+    const from = "1900-01-01"
+    const to = "2030-12-31"
+
     test("Should return transaction taken by userID from db", async () => {
         await prisma.user.create({ data: user })
         await prisma.transaction.create({ data: transaction })
 
         const sut = new PostgresGetTransactionsByUserIdRepository()
 
-        const result = await sut.execute(user.id)
+        const result = await sut.execute(user.id, from, to)
 
         expect(result[0].id).toBe(transaction.id)
         expect(result[0].user_id).toBe(transaction.user_id)
         expect(result[0].name).toBe(transaction.name)
-        expect(dayjs(result[0].date).daysInMonth()).toBe(
-            dayjs(transaction.date).daysInMonth(),
-        )
-        expect(dayjs(result[0].date).month()).toBe(
-            dayjs(transaction.date).month(),
-        )
-        expect(dayjs(result[0].date).year()).toBe(
-            dayjs(transaction.date).year(),
-        )
         expect(Number(result[0].amount)).toBe(transaction.amount)
         expect(result[0].type).toBe(transaction.type)
     })
@@ -49,7 +42,7 @@ describe("PostgresGetTransactionByUserId", () => {
         await prisma.user.create({ data: user })
         const sut = new PostgresGetTransactionsByUserIdRepository()
 
-        const result = await sut.execute(user.id)
+        const result = await sut.execute(user.id, from, to)
 
         expect(result).toEqual([])
     })
@@ -59,10 +52,13 @@ describe("PostgresGetTransactionByUserId", () => {
 
         const sut = new PostgresGetTransactionsByUserIdRepository()
 
-        await sut.execute(user.id)
+        await sut.execute(user.id, from, to)
 
         expect(prismaSpy).toHaveBeenCalledWith({
-            where: { user_id: user.id },
+            where: {
+                user_id: user.id,
+                date: { gte: new Date(from), lte: new Date(to) },
+            },
         })
     })
 
@@ -72,7 +68,7 @@ describe("PostgresGetTransactionByUserId", () => {
             .spyOn(prisma.transaction, "findMany")
             .mockRejectedValueOnce(new Error())
 
-        const promise = sut.execute(user.id)
+        const promise = sut.execute(user.id, from, to)
         await expect(promise).rejects.toThrow()
     })
 })

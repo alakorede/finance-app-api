@@ -32,8 +32,8 @@ describe("GetTransactionsByUserIdController", () => {
     const httpRequest = {
         query: {
             userId: faker.string.uuid(),
-            from: "2024-01-01",
-            to: "2025-08-21",
+            from: "1900-01-01",
+            to: "2030-12-31",
         },
     }
 
@@ -117,6 +117,10 @@ describe("GetTransactionsByUserIdController", () => {
         //act
         await sut.execute(httpRequest)
         //assert
-        expect(executeSpy).toHaveBeenCalledWith(httpRequest.query.userId)
+        expect(executeSpy).toHaveBeenCalledWith(
+            httpRequest.query.userId,
+            httpRequest.query.from,
+            httpRequest.query.to,
+        )
     })
 })

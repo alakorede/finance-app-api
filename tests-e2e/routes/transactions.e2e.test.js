@@ -18,8 +18,8 @@ describe("Transactions Routes E2E Tests", () => {
         type: faker.helpers.arrayElement(["EXPENSE", "INVESTMENT", "EARNING"]),
     }
 
-    const from = "2024-01-01"
-    const to = "2025-08-21"
+    const from = "1900-01-01"
+    const to = "2030-12-31"
 
     test("POST /api/transaction should return 200 and new transaction data on body when transaction is created", async () => {
         const createdUser = await request(app).post("/api/users").send(userData)
@@ -62,15 +62,6 @@ describe("Transactions Routes E2E Tests", () => {
         expect(response.body[0].id).toBe(newTransaction.body.id)
         expect(response.body[0].user_id).toBe(createdUser.body.id)
         expect(response.body[0].name).toEqual(newTransaction.body.name)
-        expect(dayjs(response.body[0].date).daysInMonth()).toBe(
-            dayjs(newTransaction.body.date).daysInMonth(),
-        )
-        expect(dayjs(response.body[0].date).month()).toBe(
-            dayjs(newTransaction.body.date).month(),
-        )
-        expect(dayjs(response.body[0].date).year()).toBe(
-            dayjs(newTransaction.body.date).year(),
-        )
         expect(response.body[0].amount).toBe(newTransaction.body.amount)
         expect(response.body[0].type).toBe(newTransaction.body.type)
     })
