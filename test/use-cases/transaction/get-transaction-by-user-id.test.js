@@ -90,11 +90,15 @@ describe("GetTransactionByUserIdUseCase", () => {
             getTransactionsByUserIdRepository,
             "execute",
         )
+        const from = "2024-01-01"
+        const to = "2025-08-21"
         //act
-        await sut.execute(userId)
+        await sut.execute(userId, from, to)
         //assert
         expect(getTransactionsByUserIdRepositorySpy).toHaveBeenCalledWith(
             userId,
+            from,
+            to,
         )
     })
 
