@@ -278,6 +278,30 @@
             "get": {
                 "summary": "Get user Transactions",
                 "tags": ["Transaction"],
+                "parameters": [
+                    {
+                        "name": "from",
+                        "in": "query",
+                        "required": true,
+                        "description": "Start date for the transactions query (format: YYYY-MM-DD)",
+                        "schema": {
+                            "type": "string",
+                            "format": "date",
+                            "example": "2025-03-25"
+                        }
+                    },
+                    {
+                        "name": "to",
+                        "in": "query",
+                        "required": true,
+                        "description": "End date for the transactions query (format: YYYY-MM-DD)",
+                        "schema": {
+                            "type": "string",
+                            "format": "date",
+                            "example": "2025-04-25"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Transaction created successfully",
