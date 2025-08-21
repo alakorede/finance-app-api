@@ -19,6 +19,10 @@ describe("GetUserBalanceController", () => {
         params: {
             userId: faker.string.uuid(),
         },
+        query: {
+            from: "1900-01-01",
+            to: "2030-12-31",
+        },
     }
 
     test("Should return 200 when get user balance successfully", async () => {
@@ -35,7 +39,13 @@ describe("GetUserBalanceController", () => {
         //arrange
         const { sut } = makeSut()
         //act
-        const result = await sut.execute({ params: {} })
+        const result = await sut.execute({
+            params: {},
+            query: {
+                from: "1900-01-01",
+                to: "2030-12-31",
+            },
+        })
         //assert
         expect(result.statusCode).toBe(400)
         expect(result.body.message).toBe(
@@ -47,7 +57,13 @@ describe("GetUserBalanceController", () => {
         //arrange
         const { sut } = makeSut()
         //act
-        const result = await sut.execute({ params: { userId: "invalid_id" } })
+        const result = await sut.execute({
+            params: { userId: "invalid_id" },
+            query: {
+                from: "1900-01-01",
+                to: "2030-12-31",
+            },
+        })
         //assert
         expect(result.statusCode).toBe(400)
         expect(result.body.message).toBe(
@@ -81,6 +97,10 @@ describe("GetUserBalanceController", () => {
         //act
         await sut.execute(httpRequest)
         //assert
-        expect(executeSpy).toHaveBeenCalledWith(httpRequest.params.userId)
+        expect(executeSpy).toHaveBeenCalledWith(
+            httpRequest.params.userId,
+            httpRequest.query.from,
+            httpRequest.query.to,
+        )
     })
 })
