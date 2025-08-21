@@ -3,7 +3,7 @@ import { app } from "../../src/app.js"
 import { faker } from "@faker-js/faker"
 import dayjs from "dayjs"
 
-describe("UserRoutes E2E Tests", () => {
+describe("Transactions Routes E2E Tests", () => {
     const userData = {
         first_name: faker.person.firstName(),
         last_name: faker.person.lastName(),
@@ -17,6 +17,9 @@ describe("UserRoutes E2E Tests", () => {
         amount: Number(faker.finance.amount(10, 1000)),
         type: faker.helpers.arrayElement(["EXPENSE", "INVESTMENT", "EARNING"]),
     }
+
+    const from = "2024-01-01"
+    const to = "2025-08-21"
 
     test("POST /api/transaction should return 200 and new transaction data on body when transaction is created", async () => {
         const createdUser = await request(app).post("/api/users").send(userData)
@@ -37,7 +40,7 @@ describe("UserRoutes E2E Tests", () => {
         expect(response.body.type).toBe(transaction.type)
     })
 
-    test("GET /api/transaction should return 200 and the transaction data on body", async () => {
+    test(`GET /api/transaction should return 200 and retrieve updated transaction data on body`, async () => {
         const createdUser = await request(app).post("/api/users").send(userData)
 
         const newTransaction = await request(app)
@@ -49,7 +52,7 @@ describe("UserRoutes E2E Tests", () => {
             )
 
         const response = await request(app)
-            .get(`/api/transactions?userId=${createdUser.body.id}`)
+            .get(`/api/transactions?from=${from}&to=${to}`)
             .set(
                 "Authorization",
                 `Bearer ${createdUser.body.tokens.accessToken}`,
