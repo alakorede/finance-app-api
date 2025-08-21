@@ -30,7 +30,6 @@ export class GetTransactionsByUserIdController {
             return serverReturn(200, transactions)
         } catch (e) {
             if (e instanceof ZodError) {
-                console.error({ message: e.errors[0].message })
                 return serverReturn(400, { message: e.errors[0].message })
             }
 
