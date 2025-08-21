@@ -32,6 +32,8 @@ describe("GetTransactionsByUserIdController", () => {
     const httpRequest = {
         query: {
             userId: faker.string.uuid(),
+            from: "2024-01-01",
+            to: "2025-08-21",
         },
     }
 
