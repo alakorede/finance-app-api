@@ -65,3 +65,12 @@ export const refreshTokenSchema = z.object({
             message: "Refresh token is required",
         }),
 })
+
+export const getUserBalanceSchema = z.object({
+    user_id: z
+        .string({ required_error: "Id must be provided and must be an UUID" })
+        .trim()
+        .uuid({ message: "Id must be provided and must be an UUID" }),
+    from: z.string({ required_error: "date 'from' is required" }).date(),
+    to: z.string({ required_error: "date 'to' is required" }).date(),
+})
