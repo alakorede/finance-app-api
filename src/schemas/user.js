@@ -67,7 +67,7 @@ export const refreshTokenSchema = z.object({
 })
 
 export const getUserBalanceSchema = z.object({
-    user_id: z
+    userId: z
         .string({ required_error: "Id must be provided and must be an UUID" })
         .trim()
         .uuid({ message: "Id must be provided and must be an UUID" }),

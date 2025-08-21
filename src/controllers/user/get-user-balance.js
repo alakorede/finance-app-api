@@ -1,5 +1,6 @@
 import { internalServerError, serverReturn } from "../helpers/index.js"
 import { getUserBalanceSchema } from "../../schemas/index.js"
+import { ZodError } from "zod"
 
 export class GetUserBalanceController {
     constructor(getUserBalanceUseCase) {
@@ -12,7 +13,7 @@ export class GetUserBalanceController {
             const to = httpRequest.query.to
 
             await getUserBalanceSchema.parseAsync({
-                user_id: userId,
+                userId,
                 from,
                 to,
             })
@@ -25,6 +26,9 @@ export class GetUserBalanceController {
 
             return serverReturn(200, userBalanceInfo)
         } catch (e) {
+            if (e instanceof ZodError) {
+                return serverReturn(400, { message: e.errors[0].message })
+            }
             console.error("GetUserBalanceController error:", e)
             return internalServerError()
         }
