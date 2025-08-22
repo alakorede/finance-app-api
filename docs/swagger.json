@@ -600,10 +600,6 @@
         "UserBalance": {
             "type": "object",
             "properties": {
-                "user_id": {
-                    "type": "string",
-                    "example": "f70361c5-1b2c-4d70-ab01-596ac522c4ef"
-                },
                 "earnings": {
                     "type": "string",
                     "example": "60000"
@@ -615,6 +611,18 @@
                 "investments": {
                     "type": "string",
                     "example": "0"
+                },
+                "earningsPercentage": {
+                    "type": "string",
+                    "example": "58"
+                },
+                "expensesPercentage": {
+                    "type": "string",
+                    "example": "29"
+                },
+                "investmentsPercentage": {
+                    "type": "string",
+                    "example": "11"
                 },
                 "balance": {
                     "type": "string",
