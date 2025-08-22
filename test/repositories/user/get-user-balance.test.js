@@ -4,6 +4,9 @@ import { faker } from "@faker-js/faker"
 
 describe("PostgresGetUserBalanceRepository", () => {
     test("Should get user balance on db", async () => {
+        const from = "1900-01-01"
+        const to = "2030-12-31"
+
         const user = await prisma.user.create({
             data: {
                 id: faker.string.uuid(),
@@ -62,13 +65,11 @@ describe("PostgresGetUserBalanceRepository", () => {
         })
 
         const sut = new PostgresGetUserBalanceRepository()
-        const result = await sut.execute(user.id)
+        const result = await sut.execute(user.id, from, to)
 
-        expect(result[0].user_id).toBe(user.id)
-        expect(Number(result[0].earnings)).toBe(35000)
-        expect(Number(result[0].expenses)).toBe(10000)
-        expect(Number(result[0].investments)).toBe(20000)
-        //balance = earnings- (expenses + investments)
-        expect(Number(result[0].balance)).toBe(5000)
+        expect(Number(result.earnings)).toBe(35000)
+        expect(Number(result.expenses)).toBe(10000)
+        expect(Number(result.investments)).toBe(20000)
+        expect(Number(result.balance)).toBe(5000)
     })
 })
