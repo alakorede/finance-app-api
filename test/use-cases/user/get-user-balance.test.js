@@ -39,12 +39,15 @@ describe("GetUserBalanceUseCase", () => {
         return { getUserBalanceRepository, getUserByIdRepository, sut }
     }
 
+    const from = "2024-01-01"
+    const to = "2025-08-21"
+
     test("Should get user balance successfully", async () => {
         //arrange
         const { sut } = makeSut()
 
         //act
-        const result = await sut.execute(faker.string.uuid())
+        const result = await sut.execute(faker.string.uuid(), from, to)
         //assert
         expect(result).toBeTruthy
         expect(result).toEqual(balance)
@@ -57,7 +60,7 @@ describe("GetUserBalanceUseCase", () => {
             .spyOn(getUserByIdRepository, "execute")
             .mockResolvedValue(null)
         //act
-        const promise = sut.execute(faker.string.uuid())
+        const promise = sut.execute(faker.string.uuid(), from, to)
         //assert
         await expect(promise).rejects.toThrow(new UserNotFoundError())
     })
@@ -85,9 +88,9 @@ describe("GetUserBalanceUseCase", () => {
             "execute",
         )
         //act
-        await sut.execute(userId)
+        await sut.execute(userId, from, to)
         //assert
-        expect(executeSpy).toHaveBeenCalledWith(userId)
+        expect(executeSpy).toHaveBeenCalledWith(userId, from, to)
     })
 
     test("Should throw if GetBalanceRepository trows", async () => {
@@ -98,7 +101,7 @@ describe("GetUserBalanceUseCase", () => {
             .mockRejectedValueOnce(new Error())
 
         //act
-        const promise = sut.execute(faker.string.uuid())
+        const promise = sut.execute(faker.string.uuid(), from, to)
 
         //assert
         await expect(promise).rejects.toThrow()
@@ -112,7 +115,7 @@ describe("GetUserBalanceUseCase", () => {
             .mockRejectedValueOnce(new Error())
 
         //act
-        const promise = sut.execute(faker.string.uuid())
+        const promise = sut.execute(faker.string.uuid(), from, to)
 
         //assert
         await expect(promise).rejects.toThrow()
