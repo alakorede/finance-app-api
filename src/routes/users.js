@@ -59,7 +59,7 @@ usersRouter.post("/api/users", async (request, response) => {
     return response.status(statusCode).json(body)
 })
 
-usersRouter.get("/api/users", auth, async (request, response) => {
+usersRouter.get("/api/users/me/", auth, async (request, response) => {
     const getUserByIdRepository = new PostgresGetUserByIdRepository()
     const getUserbyIdUseCase = new GetUserByIdUseCase(getUserByIdRepository)
     const getUserByIdController = new GetUserByIdController(getUserbyIdUseCase)
@@ -72,7 +72,7 @@ usersRouter.get("/api/users", auth, async (request, response) => {
     return response.status(statusCode).json(body)
 })
 
-usersRouter.patch("/api/users/", auth, async (request, response) => {
+usersRouter.patch("/api/users/me/", auth, async (request, response) => {
     const getUserByEmailRepository = new PostgresGetUserByEmailRepository()
     const updateUserRepository = new PostgresUpdateUserRepository()
     const passwordHasherAdapter = new PasswordHasherAdapter()
@@ -91,7 +91,7 @@ usersRouter.patch("/api/users/", auth, async (request, response) => {
     return response.status(statusCode).json(body)
 })
 
-usersRouter.delete("/api/users/", auth, async (request, response) => {
+usersRouter.delete("/api/users/me/", auth, async (request, response) => {
     const deleteUserRepository = new PostgresDeleteUserRepository()
     const deleteUserUseCase = new DeleteUserUseCase(deleteUserRepository)
     const deleteUserController = new DeleteUserController(deleteUserUseCase)
@@ -104,7 +104,7 @@ usersRouter.delete("/api/users/", auth, async (request, response) => {
     return response.status(statusCode).json(body)
 })
 
-usersRouter.get("/api/users/balance", auth, async (request, response) => {
+usersRouter.get("/api/users/me/balance", auth, async (request, response) => {
     const getUserBalanceRepository = new PostgresGetUserBalanceRepository()
     const getUserByIdRepository = new PostgresGetUserByIdRepository()
     const getUserBalanceUseCase = new GetUserBalanceUseCase(
