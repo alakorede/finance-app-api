@@ -20,12 +20,12 @@ describe("UserRoutes E2E Tests", () => {
         expect(response.body.email).toBe(userData.email)
     })
 
-    test("GET /api/users should return 200 and user dara on body when user is found", async () => {
+    test("GET /api/users/me should return 200 and user dara on body when user is found", async () => {
         const { body: createdUser } = await request(app)
             .post("/api/users")
             .send(userData)
         const response = await request(app)
-            .get(`/api/users`)
+            .get(`/api/users/me`)
             .set("Authorization", `Bearer ${createdUser.tokens.accessToken}`)
 
         expect(response.status).toBe(200)
@@ -36,7 +36,7 @@ describe("UserRoutes E2E Tests", () => {
         expect(response.body.email).toBe(createdUser.email)
     })
 
-    test("PATCH /api/users should return 200 and userData up to date when user is updated", async () => {
+    test("PATCH /api/users/me should return 200 and userData up to date when user is updated", async () => {
         const { body: createdUser } = await request(app)
             .post("/api/users")
             .send(userData)
@@ -48,7 +48,7 @@ describe("UserRoutes E2E Tests", () => {
             password: faker.internet.password({ length: 7 }),
         }
         const response = await request(app)
-            .patch(`/api/users`)
+            .patch(`/api/users/me`)
             .send(updateUser)
             .set("Authorization", `Bearer ${createdUser.tokens.accessToken}`)
 
@@ -60,12 +60,12 @@ describe("UserRoutes E2E Tests", () => {
         expect(response.body.email).toBe(updateUser.email)
     })
 
-    test("DELETE /api/users should return 200 and userData when user is deleted", async () => {
+    test("DELETE /api/users/me should return 200 and userData when user is deleted", async () => {
         const { body: createdUser } = await request(app)
             .post("/api/users")
             .send(userData)
         const response = await request(app)
-            .delete(`/api/users`)
+            .delete(`/api/users/me`)
             .set("Authorization", `Bearer ${createdUser.tokens.accessToken}`)
 
         expect(response.status).toBe(200)
@@ -153,7 +153,7 @@ describe("UserRoutes E2E Tests", () => {
         expect(response.status).toBe(401)
     })
 
-    test("GET /api/users/balance should return 200 and correct balance info", async () => {
+    test("GET /api/users/me/balance should return 200 and correct balance info", async () => {
         const from = "1900-01-01"
         const to = "2030-12-31"
 
@@ -194,7 +194,7 @@ describe("UserRoutes E2E Tests", () => {
             .set("Authorization", `Bearer ${createdUser.tokens.accessToken}`)
 
         const response = await request(app)
-            .get(`/api/users/balance?from=${from}&to=${to}`)
+            .get(`/api/users/me/balance?from=${from}&to=${to}`)
             .set("Authorization", `Bearer ${createdUser.tokens.accessToken}`)
 
         expect(response.status).toBe(200)
