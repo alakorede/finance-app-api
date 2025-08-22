@@ -48,10 +48,12 @@
                         }
                     }
                 }
-            },
+            }
+        },
+        "/api/users/me": {
             "get": {
                 "tags": ["User"],
-                "summary": "Get user",
+                "summary": "Get authenticated user data",
                 "responses": {
                     "200": {
                         "description": "User found",
@@ -85,7 +87,7 @@
                 ]
             },
             "delete": {
-                "summary": "Delete user",
+                "summary": "Delete authenticated user",
                 "tags": ["User"],
                 "responses": {
                     "200": {
@@ -120,7 +122,7 @@
                 ]
             },
             "patch": {
-                "summary": "Updates user",
+                "summary": "Updates authenticated user",
                 "tags": ["User"],
                 "parameters": [
                     {
@@ -237,10 +239,10 @@
                 }
             }
         },
-        "/api/users/balance": {
+        "/api/users/me/balance": {
             "get": {
                 "tags": ["User"],
-                "summary": "Get user balance",
+                "summary": "Get authenticated user balance",
                 "parameters": [
                     {
                         "name": "from",
