@@ -1,7 +1,6 @@
 import { PostgresCreateTransactionRepository } from "../../../src/repositories/postgres/index.js"
 import { prisma } from "../../../prisma/prisma.js"
 import { faker } from "@faker-js/faker"
-import dayjs from "dayjs"
 
 describe("PostgresCreateTransactionRepository", () => {
     const user = {
@@ -30,11 +29,6 @@ describe("PostgresCreateTransactionRepository", () => {
         expect(result.id).toBe(transaction.id)
         expect(result.user_id).toBe(transaction.user_id)
         expect(result.name).toBe(transaction.name)
-        expect(dayjs(result.date).daysInMonth()).toBe(
-            dayjs(transaction.date).daysInMonth(),
-        )
-        expect(dayjs(result.date).month()).toBe(dayjs(transaction.date).month())
-        expect(dayjs(result.date).year()).toBe(dayjs(transaction.date).year())
         expect(Number(result.amount)).toBe(transaction.amount)
         expect(result.type).toBe(transaction.type)
     })

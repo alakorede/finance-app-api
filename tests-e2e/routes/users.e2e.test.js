@@ -20,7 +20,7 @@ describe("UserRoutes E2E Tests", () => {
         expect(response.body.email).toBe(userData.email)
     })
 
-    test("GET /api/usersshould return 200 and user dara on body when user is found", async () => {
+    test("GET /api/users should return 200 and user dara on body when user is found", async () => {
         const { body: createdUser } = await request(app)
             .post("/api/users")
             .send(userData)
@@ -40,6 +40,7 @@ describe("UserRoutes E2E Tests", () => {
         const { body: createdUser } = await request(app)
             .post("/api/users")
             .send(userData)
+
         const updateUser = {
             first_name: faker.person.firstName(),
             last_name: faker.person.lastName(),
@@ -128,7 +129,6 @@ describe("UserRoutes E2E Tests", () => {
             .post("/api/users/refresh-token")
             .send({ refreshToken: loginData.tokens.refreshToken })
 
-        console.log(response.body)
         expect(response.status).toBe(200)
         expect(response.body.accessToken).toBeDefined()
         expect(response.body.refreshToken).toBeDefined()
@@ -151,5 +151,61 @@ describe("UserRoutes E2E Tests", () => {
             })
 
         expect(response.status).toBe(401)
+    })
+
+    test("GET /api/users/balance should return 200 and correct balance info", async () => {
+        const from = "1900-01-01"
+        const to = "2030-12-31"
+
+        const { body: createdUser } = await request(app)
+            .post("/api/users")
+            .send(userData)
+
+        const transaction = {
+            name: faker.finance.accountName(),
+            date: faker.date.anytime().toISOString(),
+        }
+
+        await request(app)
+            .post("/api/transactions")
+            .send({
+                ...transaction,
+                amount: 10000,
+                type: "EARNING",
+            })
+            .set("Authorization", `Bearer ${createdUser.tokens.accessToken}`)
+
+        await request(app)
+            .post("/api/transactions")
+            .send({
+                ...transaction,
+                amount: 2000,
+                type: "INVESTMENT",
+            })
+            .set("Authorization", `Bearer ${createdUser.tokens.accessToken}`)
+
+        await request(app)
+            .post("/api/transactions")
+            .send({
+                ...transaction,
+                amount: 5000,
+                type: "EXPENSE",
+            })
+            .set("Authorization", `Bearer ${createdUser.tokens.accessToken}`)
+
+        const response = await request(app)
+            .get(`/api/users/balance?from=${from}&to=${to}`)
+            .set("Authorization", `Bearer ${createdUser.tokens.accessToken}`)
+
+        expect(response.status).toBe(200)
+        expect(response.body).toEqual({
+            earnings: "10000",
+            expenses: "5000",
+            investments: "2000",
+            earningsPercentage: "58",
+            expensesPercentage: "29",
+            investmentsPercentage: "11",
+            balance: "3000",
+        })
     })
 })
